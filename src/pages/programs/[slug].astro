@@ -1,0 +1,104 @@
+---
+// src/pages/programs/[slug].astro
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AuroraBackground from '../../components/ui/AuroraBackground.astro';
+import { ArrowLeft, Clock, User, CheckCircle } from 'lucide-react';
+
+export async function getStaticPaths() {
+  const programs = await getCollection('programs');
+  return programs.map(entry => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+---
+
+<BaseLayout title={entry.data.title} description={entry.data.description}>
+  <article class="relative min-h-screen pt-32 pb-24 overflow-hidden">
+    <AuroraBackground />
+    
+    <div class="max-w-5xl mx-auto px-4 relative z-10">
+      
+      {/* Back Button */}
+      <a href="/programs" class="inline-flex items-center text-slate-400 hover:text-white mb-8 group transition-colors">
+        <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" /> 
+        Back to Programs
+      </a>
+
+      {/* Hero Header */}
+      <div class="relative rounded-3xl overflow-hidden border border-white/10 shadow-2xl mb-16 bg-[#020617]">
+        {/* Background Image */}
+        <div class="absolute inset-0">
+           {entry.data.image && (
+             <img src={entry.data.image} alt={entry.data.title} class="w-full h-full object-cover opacity-40" />
+           )}
+           <div class="absolute inset-0 bg-gradient-to-r from-[#020617] via-[#020617]/80 to-transparent"></div>
+        </div>
+
+        {/* Hero Content */}
+        <div class="relative p-8 md:p-16 max-w-2xl">
+           <h1 class="font-heading text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-lg">
+             {entry.data.title}
+           </h1>
+           <p class="text-xl text-slate-300 mb-8 leading-relaxed font-light">
+             {entry.data.description}
+           </p>
+
+           <div class="flex flex-wrap gap-6">
+             {entry.data.duration && (
+               <div class="flex items-center text-pelican-coral font-bold tracking-widest uppercase text-sm bg-pelican-coral/10 px-4 py-2 rounded-full border border-pelican-coral/20">
+                 <Clock className="w-4 h-4 mr-2" /> {entry.data.duration}
+               </div>
+             )}
+             {entry.data.level && (
+               <div class="flex items-center text-blue-300 font-bold tracking-widest uppercase text-sm bg-blue-500/10 px-4 py-2 rounded-full border border-blue-500/20">
+                 <User className="w-4 h-4 mr-2" /> {entry.data.level}
+               </div>
+             )}
+           </div>
+        </div>
+      </div>
+
+      {/* Main Content Area - THE FIX */}
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        
+        {/* The Markdown Content: Using 'rich-text' class for styling */}
+        <div class="lg:col-span-8 rich-text">
+           <Content />
+        </div>
+
+        {/* Sidebar CTA */}
+        <div class="lg:col-span-4">
+          <div class="sticky top-32 bg-white/5 border border-white/10 p-8 rounded-2xl backdrop-blur-md">
+            <h3 class="font-heading text-2xl text-white mb-4">Ready to Board?</h3>
+            <p class="text-slate-400 text-sm mb-6">
+              Spots for {entry.data.title} are limited. Secure your place in the next cohort.
+            </p>
+            
+            <div class="space-y-4 mb-8">
+              <div class="flex items-center text-sm text-slate-300">
+                <CheckCircle className="w-4 h-4 mr-3 text-pelican-coral" /> Certified Material
+              </div>
+              <div class="flex items-center text-sm text-slate-300">
+                <CheckCircle className="w-4 h-4 mr-3 text-pelican-coral" /> Expert Mentors
+              </div>
+              <div class="flex items-center text-sm text-slate-300">
+                <CheckCircle className="w-4 h-4 mr-3 text-pelican-coral" /> Career Guidance
+              </div>
+            </div>
+
+            <a href="/contact" class="block w-full py-4 bg-pelican-coral hover:bg-white hover:text-[#020617] text-white font-bold rounded-xl text-center transition-all shadow-lg shadow-pelican-coral/20">
+              Apply Now
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </article>
+</BaseLayout>

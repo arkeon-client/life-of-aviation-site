@@ -1,0 +1,26 @@
+---
+// src/pages/404.astro
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { CloudOff } from 'lucide-react';
+---
+
+<BaseLayout title="Page Not Found">
+  <div class="min-h-[70vh] flex flex-col items-center justify-center text-center px-4 bg-cloud-white">
+    
+    <div class="bg-aviation-blue/10 p-6 rounded-full mb-6 animate-pulse">
+      <CloudOff className="w-16 h-16 text-aviation-blue" />
+    </div>
+
+    <h1 class="font-heading text-6xl md:text-8xl font-bold text-aviation-blue mb-4">404</h1>
+    <h2 class="font-heading text-2xl md:text-3xl text-gray-700 mb-6">You have flown off course.</h2>
+    
+    <p class="font-body text-gray-500 max-w-md mb-10">
+      The page you are looking for doesn't exist or has been moved. Let's get you back on the radar.
+    </p>
+
+    <a href="/" class="px-8 py-4 bg-aviation-blue text-white font-bold rounded-lg hover:bg-aviation-dark transition-colors shadow-lg">
+      Return to Base (Home)
+    </a>
+
+  </div>
+</BaseLayout>

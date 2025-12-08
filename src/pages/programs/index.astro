@@ -1,0 +1,67 @@
+---
+// src/pages/programs/index.astro
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SpotlightCard from '../../components/ui/SpotlightCard'; // Ensure this path is correct
+import AuroraBackground from '../../components/ui/AuroraBackground.astro';
+import { getCollection } from 'astro:content';
+
+// Get programs dynamically (Aerogenesis & Mentorship)
+// We filter out workshops just in case the file still exists or cache lingers
+const programs = (await getCollection('programs')).filter(p => p.slug !== 'workshops').sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout title="Our Programs">
+  <div class="min-h-screen pt-32 pb-24 relative overflow-hidden">
+    
+    <AuroraBackground />
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      
+      <div class="text-center max-w-3xl mx-auto mb-20">
+        <h1 class="font-heading text-6xl md:text-7xl font-bold text-white mb-6 drop-shadow-2xl" data-aos="fade-up">
+          Educational <span class="text-pelican-coral">Pathways</span>
+        </h1>
+        <p class="text-xl text-slate-300" data-aos="fade-up" data-aos-delay="100">
+          Structured courses designed to take you from zero to cockpit.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+        {programs.map((program, index) => (
+          <a href={`/programs/${program.slug}`} class="block group" data-aos="fade-up" data-aos-delay={index * 150}>
+            <SpotlightCard client:load className="h-full flex flex-col border border-white/10 bg-white/5 hover:bg-white/10 transition-all">
+              
+              {/* Image Header */}
+              <div class="h-64 -mx-8 -mt-10 mb-8 relative overflow-hidden border-b border-white/5">
+                {program.data.image ? (
+                  <img 
+                    src={program.data.image} 
+                    alt={program.data.title} 
+                    class="w-full h-full object-cover opacity-80 group-hover:scale-110 group-hover:opacity-100 transition-all duration-700" 
+                  />
+                ) : (
+                  <div class="w-full h-full bg-slate-800"></div>
+                )}
+                <div class="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent"></div>
+              </div>
+
+              <h3 class="font-heading text-3xl text-white mb-4 group-hover:text-pelican-coral transition-colors">
+                {program.data.title}
+              </h3>
+              
+              <p class="text-slate-300 mb-6 flex-grow text-lg leading-relaxed">
+                {program.data.description}
+              </p>
+              
+              <div class="flex items-center text-pelican-coral font-bold tracking-widest uppercase text-sm">
+                Explore Program <span class="ml-2 text-xl group-hover:translate-x-2 transition-transform">&rarr;</span>
+              </div>
+
+            </SpotlightCard>
+          </a>
+        ))}
+      </div>
+
+    </div>
+  </div>
+</BaseLayout>

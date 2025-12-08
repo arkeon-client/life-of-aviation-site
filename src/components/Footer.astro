@@ -1,0 +1,153 @@
+---
+// src/components/Footer.astro
+import PelicanIcon from './PelicanIcon';
+import { Instagram, Linkedin, Send, Phone, Mail, Check, ExternalLink } from 'lucide-react';
+
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="relative bg-[#020617] pt-16 pb-8 overflow-hidden border-t border-white/5">
+  
+  {/* Moving Gradient Border */}
+  <div class="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-[#020617] via-pelican-coral to-[#38bdf8] animate-border-flow z-20"></div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-12 mb-12">
+      
+      {/* Brand & Contacts */}
+      <div class="md:col-span-5">
+        <div class="flex items-center space-x-3 mb-6 text-pelican-coral">
+          <PelicanIcon className="w-8 h-8" client:visible />
+          <span class="font-heading text-2xl text-white">Life of Aviation</span>
+        </div>
+        <p class="text-slate-400 text-sm leading-relaxed max-w-sm mb-6">
+          Ethiopia’s premier independent aviation tutoring initiative. Turning dreams into careers.
+        </p>
+        <div class="space-y-3 mb-6">
+          <a href="tel:+251911123456" class="flex items-center text-slate-300 hover:text-pelican-coral transition-colors text-sm font-medium">
+            <Phone className="w-4 h-4 mr-3" /> +251 9XX XXX XXX
+          </a>
+          <a href="mailto:info@lifeofaviation.com" class="flex items-center text-slate-300 hover:text-pelican-coral transition-colors text-sm font-medium">
+            <Mail className="w-4 h-4 mr-3" /> info@lifeofaviation.com
+          </a>
+        </div>
+        
+        {/* Social Icons */}
+        <div class="flex space-x-3">
+          <a href="#" target="_blank" class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-pelican-coral hover:border-pelican-coral hover:-translate-y-1 transition-all">
+            <Instagram className="w-5 h-5" />
+          </a>
+          <a href="#" target="_blank" class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-pelican-coral hover:border-pelican-coral hover:-translate-y-1 transition-all">
+            <Linkedin className="w-5 h-5" />
+          </a>
+          {/* TikTok Icon (Custom SVG) */}
+          <a href="#" target="_blank" class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-pelican-coral hover:border-pelican-coral hover:-translate-y-1 transition-all">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/>
+            </svg>
+          </a>
+          <a href="https://t.me/" target="_blank" class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-pelican-coral hover:border-pelican-coral hover:-translate-y-1 transition-all">
+            <Send className="w-5 h-5" />
+          </a>
+        </div>
+      </div>
+
+      {/* Links */}
+      <div class="md:col-span-7 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 pt-2">
+        <div class="grid grid-cols-2 col-span-1 md:col-span-2 gap-6">
+            <div>
+              <h4 class="text-white font-bold mb-4 uppercase text-xs tracking-widest text-opacity-80">Explore</h4>
+              <ul class="space-y-3 text-slate-400 text-sm">
+                <li><a href="/programs" class="hover:text-white transition-colors">Programs</a></li>
+                <li><a href="/blog" class="hover:text-white transition-colors">Flight Log</a></li>
+                <li><a href="/about" class="hover:text-white transition-colors">Our Story</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="text-white font-bold mb-4 uppercase text-xs tracking-widest text-opacity-80">Legal</h4>
+              <ul class="space-y-3 text-slate-400 text-sm">
+                <li><a href="/terms" class="hover:text-white transition-colors">Terms of Service</a></li>
+                <li><a href="/privacy" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                <li><a href="/contact" class="hover:text-white transition-colors">Support</a></li>
+              </ul>
+            </div>
+        </div>
+        
+        {/* FOOTER SUBSCRIPTION BOX */}
+        <div class="bg-white/5 rounded-xl p-5 border border-white/10 h-fit">
+          <h4 class="text-white font-bold mb-2 text-sm">Join the Corps</h4>
+          <p class="text-xs text-slate-400 mb-4">Get flight briefings and course updates.</p>
+          
+          <form class="subscribe-form flex flex-col gap-3">
+            <input 
+              type="email" 
+              placeholder="pilot@example.com" 
+              class="w-full bg-[#020617] border border-white/10 rounded px-3 py-2 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-pelican-coral transition-colors"
+              required
+            />
+            <button 
+              type="submit" 
+              class="w-full bg-pelican-coral hover:bg-white hover:text-[#020617] text-white text-xs font-bold uppercase tracking-widest py-2 rounded transition-colors"
+            >
+              Subscribe
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    {/* Bottom Bar with Developer Credit */}
+    <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-slate-600 font-medium uppercase tracking-widest gap-4">
+      <p>&copy; {currentYear} Life of Aviation. All rights reserved.</p>
+      
+      <div class="flex flex-col md:flex-row items-center gap-4">
+        <span class="opacity-50">Addis Ababa, Ethiopia</span>
+        <div class="hidden md:block w-1 h-1 bg-slate-700 rounded-full"></div>
+        <a 
+            href="https://arkeon-studio.vercel.app/" 
+            target="_blank" 
+            class="flex items-center text-slate-500 hover:text-white transition-colors group"
+        >
+            Developed by Arkeon Studio
+            <ExternalLink className="w-3 h-3 ml-1 opacity-0 group-hover:opacity-100 transition-opacity" />
+        </a>
+      </div>
+    </div>
+  </div>
+
+  {/* SHARED TOAST NOTIFICATION */}
+  <div id="toast" class="fixed bottom-8 right-8 z-50 transform translate-y-32 opacity-0 transition-all duration-500 pointer-events-none">
+    <div class="bg-[#020617]/90 border border-pelican-coral/50 backdrop-blur-xl text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-4">
+      <div class="w-8 h-8 rounded-full bg-pelican-coral/20 flex items-center justify-center text-pelican-coral">
+        <Check className="w-5 h-5" />
+      </div>
+      <div>
+        <h4 class="font-bold text-sm">Welcome Aboard!</h4>
+        <p class="text-xs text-slate-400">You have subscribed successfully.</p>
+      </div>
+    </div>
+  </div>
+
+</footer>
+
+<script>
+  // Universal Subscriber Handler
+  const forms = document.querySelectorAll('.subscribe-form');
+  const toast = document.getElementById('toast');
+
+  forms.forEach(form => {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const input = form.querySelector('input[type="email"]');
+      
+      if(input && input.value) {
+          toast.classList.remove('translate-y-32', 'opacity-0', 'pointer-events-none');
+          input.value = '';
+          setTimeout(() => {
+            toast.classList.add('translate-y-32', 'opacity-0', 'pointer-events-none');
+          }, 3000);
+      }
+    });
+  });
+</script>

@@ -1,0 +1,47 @@
+---
+// src/components/Newsletter.astro
+import { Mail } from 'lucide-react';
+---
+
+<div class="relative w-full max-w-4xl mx-auto my-20">
+    <div class="absolute inset-0 bg-gradient-to-r from-pelican-coral/20 to-blue-600/20 blur-3xl opacity-30 rounded-full pointer-events-none"></div>
+    
+    <div class="relative bg-white/5 border border-white/10 rounded-3xl p-8 md:p-12 overflow-hidden backdrop-blur-md">
+        
+        {/* Background Pattern */}
+        <div class="absolute inset-0 opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+
+        <div class="flex flex-col md:flex-row items-center gap-10 relative z-10">
+            <div class="md:w-1/2 text-center md:text-left">
+                <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-pelican-coral/10 text-pelican-coral mb-6 border border-pelican-coral/20">
+                    <Mail class="w-6 h-6" />
+                </div>
+                <h3 class="font-heading text-3xl text-white mb-4">Join the Flight Deck</h3>
+                <p class="text-slate-300 leading-relaxed">
+                    Subscribe to our newsletter to receive the latest aviation insights, study tips, and Aerogenesis updates directly to your inbox.
+                </p>
+            </div>
+
+            <div class="md:w-1/2 w-full">
+                {/* Note: 'subscribe-form' class connects this to the Footer script logic */}
+                <form class="subscribe-form flex flex-col sm:flex-row gap-4">
+                    <input 
+                        type="email" 
+                        placeholder="Enter your email address" 
+                        required
+                        class="w-full bg-[#020617] border border-white/20 rounded-xl px-5 py-4 text-white placeholder-slate-500 focus:border-pelican-coral focus:ring-1 focus:ring-pelican-coral outline-none transition-all"
+                    />
+                    <button 
+                        type="submit" 
+                        class="bg-pelican-coral hover:bg-white hover:text-[#020617] text-white font-bold py-4 px-8 rounded-xl transition-all shadow-lg shadow-pelican-coral/20 whitespace-nowrap"
+                    >
+                        Subscribe
+                    </button>
+                </form>
+                <p class="text-xs text-slate-500 mt-4 text-center sm:text-left">
+                    We respect your privacy. Unsubscribe at any time.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,87 @@
+---
+// src/pages/index.astro
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import PelicanIcon from '../components/PelicanIcon';
+import SpotlightCard from '../components/ui/SpotlightCard';
+import AuroraBackground from '../components/ui/AuroraBackground.astro';
+import { Lightbulb, Compass, Shield, Award } from 'lucide-react';
+
+const values = [
+  { title: "Creativity", icon: Lightbulb, desc: "Thinking outside the cockpit to solve complex problems." },
+  { title: "Curiosity", icon: Compass, desc: "The fuel that drives every great aviator forward." },
+  { title: "Reliability", icon: Shield, desc: "Building trust through consistency and safety." },
+  { title: "Professionalism", icon: Award, desc: "Upholding the highest standards in every action." },
+];
+---
+
+<BaseLayout title="Home">
+  
+  <Hero />
+
+  <!-- Intro Section with Aurora -->
+  <section class="relative py-32 border-t border-white/5 overflow-hidden">
+    <AuroraBackground />
+    
+    <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
+      <h2 class="font-heading text-4xl md:text-5xl text-white mb-8 drop-shadow-lg" data-aos="fade-up">
+        Turning Curiosity into <span class="text-pelican-coral">Discipline</span>
+      </h2>
+      
+      <!-- Text visibility fixed: Removed 'text-gray-600', now relies on global p style (slate-300) -->
+      <p class="text-xl md:text-2xl font-light leading-relaxed mb-8" data-aos="fade-up" data-aos-delay="100">
+        Ethiopia’s first independent aviation tutoring initiative. We turn curiosity into discipline and dreams into careers. Whether you are taking your first steps or refining your professional path, we are here to guide you.
+      </p>
+    </div>
+  </section>
+
+  <!-- Core Values Block (Spotlight Effect) -->
+  <section class="py-24 bg-[#020617] relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="text-center mb-16">
+        <h2 class="font-heading text-3xl text-white">Our Core Values</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {values.map((item, index) => (
+          <div data-aos="fade-up" data-aos-delay={index * 100}>
+            {/* Using the new React Spotlight Component */}
+            <SpotlightCard client:visible>
+              <div class="text-pelican-coral mb-6">
+                <item.icon size={40} strokeWidth={1.5} />
+              </div>
+              <h3 class="font-heading text-2xl text-white mb-4">{item.title}</h3>
+              <p class="text-slate-400 text-sm leading-relaxed">
+                {item.desc}
+              </p>
+            </SpotlightCard>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- The Pelican Teaser -->
+  <section class="py-32 relative overflow-hidden border-t border-white/5">
+    <div class="absolute inset-0 bg-gradient-to-b from-slate-900/50 to-[#020617]"></div>
+    
+    <div class="max-w-6xl mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center gap-16">
+      <div class="md:w-1/2" data-aos="fade-right">
+        <span class="text-pelican-coral font-bold tracking-[0.2em] uppercase text-sm mb-4 block glow-text">The Symbol</span>
+        <h2 class="font-heading text-5xl mb-8">Why the Pelican?</h2>
+        <p class="text-lg text-slate-300 mb-8 leading-relaxed">
+          A symbol of nurture, care, and strength in flight. It represents true love, and in the Ethiopian Orthodox Church we call it ጳልቃ (Paliqa). It is the embodiment of the sacrifice required to excel.
+        </p>
+        <a href="/about" class="px-8 py-3 rounded-full border border-pelican-coral/50 bg-pelican-coral/10 hover:bg-pelican-coral hover:text-white text-white transition-all duration-300 font-medium inline-flex items-center group shadow-[0_0_15px_rgba(255,111,97,0.1)]">
+          Read the Story <span class="ml-2 group-hover:translate-x-1 transition-transform">&rarr;</span>
+        </a>
+      </div>
+      
+      <div class="md:w-1/2 flex justify-center relative">
+         <div class="absolute inset-0 bg-pelican-coral/20 blur-[80px] rounded-full animate-pulse"></div>
+         <PelicanIcon className="w-80 h-80 text-white relative z-10 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]" />
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>

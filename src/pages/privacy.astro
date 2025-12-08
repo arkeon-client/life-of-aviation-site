@@ -1,0 +1,25 @@
+---
+// src/pages/privacy.astro
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Privacy Policy">
+  <div class="max-w-4xl mx-auto px-4 py-20">
+    <h1 class="font-heading text-4xl text-aviation-blue mb-8">Privacy Policy</h1>
+    <div class="prose prose-blue max-w-none text-gray-600 font-body">
+      <p>Last updated: {new Date().toLocaleDateString()}</p>
+      
+      <h3>1. Introduction</h3>
+      <p>Welcome to <strong>Life of Aviation by Abel</strong>. We respect your privacy and are committed to protecting your personal data.</p>
+      
+      <h3>2. Data We Collect</h3>
+      <p>We may collect personal identification information (Name, Email, Age) when you fill out our contact or application forms.</p>
+      
+      <h3>3. How We Use Your Data</h3>
+      <p>We use your data to communicate with you regarding our courses, mentorship programs, and aviation workshops. We do not sell your data to third parties.</p>
+      
+      <h3>4. Contact Us</h3>
+      <p>If you have any questions about this Privacy Policy, please contact us at <a href="mailto:info@lifeofaviation.com">info@lifeofaviation.com</a>.</p>
+    </div>
+  </div>
+</BaseLayout>

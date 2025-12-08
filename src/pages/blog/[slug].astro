@@ -1,0 +1,66 @@
+---
+// src/pages/blog/[slug].astro
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AuroraBackground from '../../components/ui/AuroraBackground.astro';
+import Newsletter from '../../components/Newsletter.astro';
+import { ArrowLeft, Calendar, User } from 'lucide-react';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map(post => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+---
+
+<BaseLayout title={post.data.title} description={post.data.description}>
+  <article class="relative min-h-screen pt-32 pb-24 overflow-hidden">
+    <AuroraBackground />
+    
+    <div class="max-w-4xl mx-auto px-4 relative z-10">
+      
+      {/* Back Link */}
+      <a href="/blog" class="inline-flex items-center text-slate-400 hover:text-pelican-coral transition-colors mb-8 group">
+        <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
+        Back to Flight Log
+      </a>
+
+      {/* Header */}
+      <div class="mb-12 text-center">
+        <div class="flex items-center justify-center gap-4 text-sm text-pelican-coral font-bold tracking-widest uppercase mb-6">
+          <span class="flex items-center"><Calendar class="w-4 h-4 mr-2"/> {new Date(post.data.publishDate).toLocaleDateString()}</span>
+          <span class="w-1 h-1 rounded-full bg-slate-600"></span>
+          <span class="flex items-center"><User class="w-4 h-4 mr-2"/> Abel</span>
+        </div>
+        
+        <h1 class="font-heading text-4xl md:text-6xl text-white font-bold leading-tight mb-8">
+          {post.data.title}
+        </h1>
+
+        {post.data.image && (
+          <div class="rounded-3xl overflow-hidden border border-white/10 shadow-2xl relative aspect-video">
+            <img src={post.data.image} alt={post.data.title} class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent opacity-60"></div>
+          </div>
+        )}
+      </div>
+
+      {/* Markdown Content */}
+      <div class="prose prose-lg prose-invert max-w-none prose-headings:font-heading prose-headings:text-white prose-p:text-slate-300 prose-a:text-pelican-coral prose-strong:text-white">
+        <Content />
+      </div>
+
+      {/* DIVIDER */}
+      <div class="w-full h-px bg-white/10 my-16"></div>
+
+      {/* Integrated Newsletter Component */}
+      <Newsletter />
+
+    </div>
+  </article>
+</BaseLayout>

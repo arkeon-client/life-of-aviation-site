@@ -1,0 +1,66 @@
+---
+// src/layouts/BaseLayout.astro
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { 
+  title, 
+  description = "Reshaping aviation education in Ethiopia through structured learning, storytelling, and professional guidance." 
+} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    
+    <!-- SEO -->
+    <title>{title} | Life of Aviation by Abel</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content="aviation tutoring Ethiopia, aviation education Africa, aviation courses online, aspiring pilot Ethiopia" />
+    <meta name="author" content="Abel" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    
+  </head>
+  <body class="bg-cloud-white text-gray-800 flex flex-col min-h-screen">
+    
+    <!-- Navigation (React Component - Loaded immediately) -->
+    <Navbar client:load />
+
+    <!-- Main Content -->
+    <main class="flex-grow pt-0">
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <Footer />
+
+    <!-- AOS Animation Script -->
+    <script>
+      import AOS from 'aos';
+      
+      // Initialize Animate On Scroll
+      document.addEventListener('DOMContentLoaded', () => {
+        AOS.init({
+          duration: 800,
+          once: true,
+          offset: 100,
+          easing: 'ease-out-cubic',
+        });
+      });
+    </script>
+  </body>
+</html>

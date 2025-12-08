@@ -1,0 +1,22 @@
+---
+// src/pages/terms.astro
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Terms of Service">
+  <div class="max-w-4xl mx-auto px-4 py-20">
+    <h1 class="font-heading text-4xl text-aviation-blue mb-8">Terms of Service</h1>
+    <div class="prose prose-blue max-w-none text-gray-600 font-body">
+      <p>Last updated: {new Date().toLocaleDateString()}</p>
+      
+      <h3>1. Educational Disclaimer</h3>
+      <p><strong>Life of Aviation by Abel</strong> is a tutoring and mentorship initiative. We provide supplemental education and career guidance. We are not a certified Flight Training Organization (ATO) and do not issue pilot licenses.</p>
+      
+      <h3>2. Intellectual Property</h3>
+      <p>All content, including the "Aerogenesis" curriculum and the Pelican logo/iconography, is the intellectual property of Life of Aviation.</p>
+      
+      <h3>3. User Conduct</h3>
+      <p>Students and visitors are expected to maintain professional behavior in all interactions, consistent with the discipline required in aviation.</p>
+    </div>
+  </div>
+</BaseLayout>

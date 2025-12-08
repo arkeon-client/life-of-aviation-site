@@ -1,0 +1,95 @@
+/* src/styles/global.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+@import 'aos/dist/aos.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  
+  html {
+    scroll-behavior: smooth;
+    @apply bg-[#020617] text-slate-200 antialiased selection:bg-pelican-coral selection:text-white;
+  }
+  body {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading text-white tracking-wide;
+  }
+
+  p {
+    @apply text-slate-300 leading-relaxed font-light;
+  }
+
+  /* --- FIX FOR "RAW HTML" CONTENT --- */
+  /* This styles any content inside a div with class "rich-text" */
+  .rich-text h2 {
+    @apply text-3xl text-white font-heading mt-12 mb-6 border-b border-white/10 pb-4;
+  }
+  
+  .rich-text h3 {
+    @apply text-xl text-pelican-coral font-heading mt-8 mb-4;
+  }
+
+  .rich-text ul {
+    @apply list-disc list-outside ml-6 mb-6 space-y-2 text-slate-300;
+  }
+
+  .rich-text ol {
+    @apply list-decimal list-outside ml-6 mb-6 space-y-2 text-slate-300;
+  }
+
+  .rich-text li {
+    @apply pl-2;
+  }
+
+  .rich-text strong {
+    @apply text-white font-bold;
+  }
+  
+  .rich-text blockquote {
+    @apply border-l-4 border-pelican-coral pl-6 italic text-slate-400 my-8 bg-white/5 py-4 pr-4 rounded-r-lg;
+  }
+
+  /* Amharic Support */
+  .amharic-text {
+    font-family: 'Noto Sans Ethiopic', 'Inter', sans-serif;
+  }
+}
+
+@layer utilities {
+  .glow-text {
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+  }
+
+  /* --- NEW ANIMATION FOR FOOTER --- */
+  .animate-border-flow {
+    background-size: 200% 200%;
+    animation: borderFlow 3s ease infinite;
+  }
+
+  @keyframes borderFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .animate-slide-down {
+    animation: slideDown 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  
+  @keyframes slideDown {
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #020617; }
+::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; border: 2px solid #020617; }
