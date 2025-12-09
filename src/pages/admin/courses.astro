@@ -1,0 +1,7 @@
+---
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import AdminCourseManager from '../../components/dashboard/AdminCourseManager';
+---
+<DashboardLayout>
+  <div class="pt-8"><AdminCourseManager client:only="react" /></div>
+</DashboardLayout>

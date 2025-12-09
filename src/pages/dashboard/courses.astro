@@ -1,0 +1,16 @@
+---
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import CourseCatalog from '../../components/dashboard/CourseCatalog';
+---
+
+<DashboardLayout>
+  
+  <div class="mb-8">
+    <h1 class="text-3xl font-heading text-white">My Flight Bag</h1>
+    <p class="text-slate-400 mt-2">Manage your enrollments and access training materials.</p>
+  </div>
+
+  <!-- Load the React Catalog Component -->
+  <CourseCatalog client:load />
+
+</DashboardLayout>

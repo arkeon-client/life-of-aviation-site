@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
-import { Mail, Lock, User, Loader2, ArrowRight } from 'lucide-react';
+import { Mail, Lock, User, Loader2, ArrowRight, AlertTriangle } from 'lucide-react';
 
 export default function AuthForm({ type = 'login' }) {
   const [loading, setLoading] = useState(false);
@@ -26,7 +26,7 @@ export default function AuthForm({ type = 'login' }) {
           email: formData.email,
           password: formData.password,
           options: {
-            data: { full_name: formData.fullName }, // Save name to profile
+            data: { full_name: formData.fullName }, // Save name to metadata
           },
         });
         if (error) throw error;
@@ -38,9 +38,11 @@ export default function AuthForm({ type = 'login' }) {
           password: formData.password,
         });
         if (error) throw error;
-        window.location.href = '/dashboard'; // Redirect to dashboard after login
+        // Successful login -> Redirect to Dashboard
+        window.location.href = '/dashboard'; 
       }
     } catch (err) {
+      console.error("Auth Error:", err);
       setError(err.message);
     } finally {
       setLoading(false);
@@ -50,8 +52,8 @@ export default function AuthForm({ type = 'login' }) {
   const inputClasses = "w-full pl-12 pr-4 py-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:border-pelican-coral focus:ring-1 focus:ring-pelican-coral outline-none transition-all";
 
   return (
-    <div className="w-full max-w-md mx-auto">
-      <div className="bg-[#020617]/50 border border-white/10 rounded-3xl p-8 md:p-10 backdrop-blur-xl shadow-2xl relative overflow-hidden">
+    <div className="w-full max-w-md mx-auto animate-fade-in">
+      <div className="bg-[#020617]/80 border border-white/10 rounded-3xl p-8 md:p-10 backdrop-blur-xl shadow-2xl relative overflow-hidden">
         
         {/* Top Gradient Line */}
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-pelican-coral to-transparent opacity-50"></div>
@@ -66,7 +68,8 @@ export default function AuthForm({ type = 'login' }) {
         </div>
 
         {error && (
-          <div className="mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-200 text-sm text-center">
+          <div className="mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-200 text-sm flex items-center gap-3">
+            <AlertTriangle size={18} />
             {error}
           </div>
         )}

@@ -1,0 +1,19 @@
+---
+import DashboardLayout from '../../../layouts/DashboardLayout.astro';
+import CourseView from '../../../components/dashboard/CourseView';
+
+// --- CRITICAL FIX: This tells Astro these pages exist ---
+export function getStaticPaths() {
+  return [
+    { params: { courseId: 'aerogenesis' } },
+    { params: { courseId: 'mentorship' } },
+  ];
+}
+// -------------------------------------------------------
+
+const { courseId } = Astro.params;
+---
+
+<DashboardLayout>
+  <CourseView client:only="react" courseId={courseId} />
+</DashboardLayout>
