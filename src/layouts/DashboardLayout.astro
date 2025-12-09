@@ -19,9 +19,23 @@ import DashboardHeader from '../components/dashboard/DashboardHeader';
       import { supabase } from '../lib/supabaseClient';
       
       async function checkAuth() {
+        // 1. Get current session
         const { data: { session } } = await supabase.auth.getSession();
+        
+        // 2. If no session, wait for a moment (auth state change) or redirect
         if (!session) {
-          window.location.href = '/signin';
+           // Double check via onAuthStateChange for initial load race conditions
+           supabase.auth.onAuthStateChange((event, session) => {
+             if (!session && event !== 'INITIAL_SESSION') {
+               window.location.href = '/signin';
+             }
+           });
+           
+           // If still nothing after slight delay, redirect
+           setTimeout(async () => {
+             const { data } = await supabase.auth.getSession();
+             if (!data.session) window.location.href = '/signin';
+           }, 1000);
         }
       }
       checkAuth();

@@ -1,43 +1,54 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabaseClient';
-import { ADMIN_EMAILS } from '../../lib/constants'; // Updated import
+import { ADMIN_EMAILS } from '../../lib/constants';
 import { User, Trash2, Mail, Loader2, Search, Sparkles, Calendar } from 'lucide-react';
+import ActionModal from '../ui/ActionModal'; // Import Modal
 
 export default function AdminUserManager() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  
+  // Modal State
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
 
   useEffect(() => {
     fetchUsers();
   }, []);
 
   async function fetchUsers() {
-    // 1. Check Admin
     const { data: { user } } = await supabase.auth.getUser();
-    
-    // UPDATED LOGIC
     if (!user || !ADMIN_EMAILS.includes(user.email)) {
       window.location.href = '/dashboard';
       return;
     }
 
-    // 2. Fetch Profiles
     const { data, error } = await supabase
       .from('profiles')
       .select('*')
-      .order('created_at', { ascending: false }); // Newest first
+      .order('created_at', { ascending: false });
 
     if (error) console.error(error);
     setUsers(data || []);
     setLoading(false);
   }
 
-  async function handleDelete(id) {
-    if (!confirm("Are you sure? This deletes the user record from the database.")) return;
+  // Trigger Modal
+  const confirmDelete = (user) => {
+    setUserToDelete(user);
+    setDeleteModalOpen(true);
+  };
+
+  // Actual Delete Logic
+  async function handleDelete() {
+    if (!userToDelete) return;
     
-    const { error } = await supabase.from('profiles').delete().eq('id', id);
-    if (error) alert('Error: ' + error.message);
+    const { error } = await supabase.from('profiles').delete().eq('id', userToDelete.id);
+    setDeleteModalOpen(false);
+    setUserToDelete(null);
+
+    if (error) alert('Error: ' + error.message); // Fallback for API error
     else fetchUsers();
   }
 
@@ -78,7 +89,6 @@ export default function AdminUserManager() {
         {filteredUsers.map(user => (
           <div key={user.id} className="bg-white/5 border border-white/10 p-4 rounded-xl flex flex-col md:flex-row items-center justify-between gap-4 group hover:bg-white/10 transition-colors relative overflow-hidden">
             
-            {/* Highlight Bar for New Users */}
             {isNewUser(user.created_at) && (
                 <div className="absolute left-0 top-0 bottom-0 w-1 bg-green-500"></div>
             )}
@@ -111,7 +121,11 @@ export default function AdminUserManager() {
               <a href={`mailto:${user.email}`} className="p-2 bg-white/5 hover:bg-white hover:text-[#020617] rounded-lg text-slate-400 transition-colors" title="Send Email">
                 <Mail size={18} />
               </a>
-              <button onClick={() => handleDelete(user.id)} className="p-2 bg-red-500/10 hover:bg-red-500 hover:text-white rounded-lg text-red-400 transition-colors" title="Delete User">
+              <button 
+                onClick={() => confirmDelete(user)} 
+                className="p-2 bg-red-500/10 hover:bg-red-500 hover:text-white rounded-lg text-red-400 transition-colors" 
+                title="Delete User"
+              >
                 <Trash2 size={18} />
               </button>
             </div>
@@ -125,6 +139,17 @@ export default function AdminUserManager() {
           </div>
         )}
       </div>
+
+      {/* Confirmation Modal */}
+      <ActionModal 
+        isOpen={deleteModalOpen}
+        onClose={() => setDeleteModalOpen(false)}
+        onConfirm={handleDelete}
+        title="Discharge Pilot?"
+        message={`Are you sure you want to remove ${userToDelete?.email}? This action cannot be undone.`}
+        confirmText="Confirm Deletion"
+        type="danger"
+      />
     </div>
   );
 }

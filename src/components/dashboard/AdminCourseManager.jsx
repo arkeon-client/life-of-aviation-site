@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabaseClient';
 import { Upload, FileText, Trash2, Loader2, Video, Link as LinkIcon, Plus } from 'lucide-react';
+import GlassModal from '../ui/ActionModal'; // Import Modal
 
 const COURSES = [
   { id: 'aerogenesis', label: 'Aerogenesis' },
@@ -14,9 +15,12 @@ export default function AdminCourseManager() {
   
   // Form State
   const [title, setTitle] = useState('');
-  const [type, setType] = useState('pdf'); // pdf, video, link
+  const [type, setType] = useState('pdf');
   const [file, setFile] = useState(null);
   const [externalLink, setExternalLink] = useState('');
+
+  // Modal State
+  const [modal, setModal] = useState({ isOpen: false, type: 'confirm', title: '', message: '', onConfirm: null });
 
   useEffect(() => {
     fetchMaterials();
@@ -43,7 +47,6 @@ export default function AdminCourseManager() {
       } else {
         if (!file) throw new Error('Please select a file');
         
-        // 1. Upload to Storage
         const fileExt = file.name.split('.').pop();
         const fileName = `${selectedCourse}/${Math.random()}.${fileExt}`;
         const { error: uploadError } = await supabase.storage
@@ -52,7 +55,6 @@ export default function AdminCourseManager() {
 
         if (uploadError) throw uploadError;
 
-        // 2. Get Public URL
         const { data: { publicUrl } } = supabase.storage
           .from('materials')
           .getPublicUrl(fileName);
@@ -60,7 +62,6 @@ export default function AdminCourseManager() {
         finalUrl = publicUrl;
       }
 
-      // 3. Save to Database
       const { error: dbError } = await supabase
         .from('course_materials')
         .insert([{
@@ -72,32 +73,63 @@ export default function AdminCourseManager() {
 
       if (dbError) throw dbError;
 
-      // Reset and Refresh
       setTitle('');
       setFile(null);
       setExternalLink('');
       fetchMaterials();
-      alert('Module added successfully');
+      
+      // Success Modal
+      setModal({
+        isOpen: true,
+        type: 'success',
+        title: 'Upload Complete',
+        message: 'The new module has been deployed to the classroom successfully.',
+        onConfirm: null
+      });
 
     } catch (err) {
       console.error(err);
-      alert('Upload failed: ' + err.message);
+      // Error Modal
+      setModal({
+        isOpen: true,
+        type: 'error',
+        title: 'Upload Failed',
+        message: err.message,
+        onConfirm: null
+      });
     } finally {
       setUploading(false);
     }
   }
 
-  async function handleDelete(id) {
-    if(!confirm('Are you sure?')) return;
+  function confirmDelete(id) {
+    setModal({
+      isOpen: true,
+      type: 'confirm',
+      title: 'Delete Material?',
+      message: 'This action cannot be undone. The file will be removed from the classroom.',
+      onConfirm: () => performDelete(id)
+    });
+  }
+
+  async function performDelete(id) {
     await supabase.from('course_materials').delete().eq('id', id);
     fetchMaterials();
   }
 
   return (
     <div className="mt-8">
+      <GlassModal 
+        isOpen={modal.isOpen} 
+        onClose={() => setModal({ ...modal, isOpen: false })} 
+        title={modal.title} 
+        message={modal.message} 
+        type={modal.type} 
+        onConfirm={modal.onConfirm} 
+      />
+
       <h2 className="text-2xl font-heading text-white mb-6">Course Content Manager</h2>
 
-      {/* Course Selector */}
       <div className="flex gap-4 mb-8">
         {COURSES.map(c => (
           <button
@@ -179,7 +211,7 @@ export default function AdminCourseManager() {
           </form>
         </div>
 
-        {/* Existing Materials List */}
+        {/* List */}
         <div className="space-y-4">
           <h3 className="text-white font-bold mb-4">Current Modules ({materials.length})</h3>
           {materials.length === 0 && <p className="text-slate-500 text-sm">No materials yet.</p>}
@@ -196,7 +228,7 @@ export default function AdminCourseManager() {
                 </div>
               </div>
               <button 
-                onClick={() => handleDelete(m.id)}
+                onClick={() => confirmDelete(m.id)}
                 className="text-slate-500 hover:text-red-400 transition-colors"
               >
                 <Trash2 size={18} />

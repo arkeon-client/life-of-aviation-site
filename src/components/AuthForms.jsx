@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
-import { Mail, Lock, User, Loader2, ArrowRight, AlertTriangle } from 'lucide-react';
+import { Mail, Lock, User, Loader2, ArrowRight, AlertTriangle, CheckCircle } from 'lucide-react';
 
 export default function AuthForm({ type = 'login' }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null); // New state for success message
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -19,6 +20,7 @@ export default function AuthForm({ type = 'login' }) {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    setSuccess(null);
 
     try {
       if (type === 'signup') {
@@ -26,19 +28,20 @@ export default function AuthForm({ type = 'login' }) {
           email: formData.email,
           password: formData.password,
           options: {
-            data: { full_name: formData.fullName }, // Save name to metadata
+            data: { full_name: formData.fullName },
           },
         });
         if (error) throw error;
-        alert('Registration successful! Please check your email to confirm.');
-        window.location.href = '/signin';
+        
+        // Branded Success Message
+        setSuccess('Registration successful! Please check your email inbox to confirm your account.');
+        
       } else {
         const { error } = await supabase.auth.signInWithPassword({
           email: formData.email,
           password: formData.password,
         });
         if (error) throw error;
-        // Successful login -> Redirect to Dashboard
         window.location.href = '/dashboard'; 
       }
     } catch (err) {
@@ -51,11 +54,30 @@ export default function AuthForm({ type = 'login' }) {
 
   const inputClasses = "w-full pl-12 pr-4 py-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:border-pelican-coral focus:ring-1 focus:ring-pelican-coral outline-none transition-all";
 
+  // SUCCESS VIEW (Replaces Alert)
+  if (success) {
+    return (
+      <div className="w-full max-w-md mx-auto animate-fade-in">
+        <div className="bg-[#020617]/90 border border-pelican-coral/50 rounded-3xl p-10 backdrop-blur-xl shadow-2xl text-center">
+          <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6 text-green-500">
+            <CheckCircle size={40} />
+          </div>
+          <h2 className="font-heading text-3xl text-white mb-4">Welcome Aboard</h2>
+          <p className="text-slate-300 mb-8 leading-relaxed">
+            {success}
+          </p>
+          <a href="/signin" className="block w-full py-4 bg-pelican-coral text-white font-bold rounded-xl hover:bg-white hover:text-[#020617] transition-all">
+            Proceed to Login
+          </a>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full max-w-md mx-auto animate-fade-in">
       <div className="bg-[#020617]/80 border border-white/10 rounded-3xl p-8 md:p-10 backdrop-blur-xl shadow-2xl relative overflow-hidden">
         
-        {/* Top Gradient Line */}
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-pelican-coral to-transparent opacity-50"></div>
 
         <div className="text-center mb-8">
@@ -68,7 +90,7 @@ export default function AuthForm({ type = 'login' }) {
         </div>
 
         {error && (
-          <div className="mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-200 text-sm flex items-center gap-3">
+          <div className="mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-200 text-sm flex items-center gap-3 animate-pulse">
             <AlertTriangle size={18} />
             {error}
           </div>
@@ -76,7 +98,6 @@ export default function AuthForm({ type = 'login' }) {
 
         <form onSubmit={handleAuth} className="space-y-5">
           
-          {/* Full Name (Sign Up Only) */}
           {type === 'signup' && (
             <div className="relative group">
               <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-pelican-coral transition-colors w-5 h-5" />
@@ -91,7 +112,6 @@ export default function AuthForm({ type = 'login' }) {
             </div>
           )}
 
-          {/* Email */}
           <div className="relative group">
             <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-pelican-coral transition-colors w-5 h-5" />
             <input
@@ -104,7 +124,6 @@ export default function AuthForm({ type = 'login' }) {
             />
           </div>
 
-          {/* Password */}
           <div className="relative group">
             <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-pelican-coral transition-colors w-5 h-5" />
             <input

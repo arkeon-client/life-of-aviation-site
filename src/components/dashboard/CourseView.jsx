@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabaseClient';
 import { Lock, CheckCircle, Send, FileText, PlayCircle, Download, XCircle, ExternalLink, RefreshCw, Loader2 } from 'lucide-react';
+import ActionModal from '../ui/ActionModal'; // Ensure you created this file in the previous step
 
 export default function CourseView({ courseId }) {
   const [loading, setLoading] = useState(true);
   const [enrollment, setEnrollment] = useState(null);
   const [modules, setModules] = useState([]);
+  
+  // State for the Confirmation Modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Fetch Enrollment Status AND Course Modules
   useEffect(() => {
@@ -40,9 +44,8 @@ export default function CourseView({ courseId }) {
 
   // Handle Re-application Logic
   const handleReapply = async () => {
-    if(!confirm("Ready to resubmit your application? Ensure you have valid payment proof ready.")) return;
-    
-    setLoading(true);
+    setIsModalOpen(false); // Close the modal
+    setLoading(true); // Show loading spinner
     
     // Update status back to pending
     const { error } = await supabase
@@ -54,6 +57,7 @@ export default function CourseView({ courseId }) {
       alert("Error: " + error.message);
       setLoading(false);
     } else {
+      // Reload page to show Pending Payment screen
       window.location.reload();
     }
   };
@@ -80,7 +84,7 @@ export default function CourseView({ courseId }) {
     );
   }
 
-  // SCENARIO 2: REJECTED (With Re-apply)
+  // SCENARIO 2: REJECTED (With Modal Trigger)
   if (enrollment.status === 'rejected') {
     return (
       <div className="max-w-2xl mx-auto mt-10 animate-fade-in">
@@ -93,8 +97,9 @@ export default function CourseView({ courseId }) {
             Your enrollment for this course was not approved. This usually happens if the payment proof was invalid, unclear, or if the course cohort is full.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
+             {/* Open Modal on Click */}
              <button 
-                onClick={handleReapply} 
+                onClick={() => setIsModalOpen(true)} 
                 className="px-6 py-3 bg-white text-red-600 font-bold rounded-xl hover:bg-gray-100 transition-colors flex items-center justify-center gap-2 shadow-lg"
              >
                 <RefreshCw size={18} /> Re-apply Now
@@ -107,6 +112,17 @@ export default function CourseView({ courseId }) {
              </a>
           </div>
         </div>
+
+        {/* The Branded Modal Component */}
+        <ActionModal 
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onConfirm={handleReapply}
+          title="Resubmit Application?"
+          message="Are you sure you want to re-apply? Please ensure you have valid payment proof ready to send to the Admin via Telegram."
+          confirmText="Yes, I am ready"
+          type="danger" 
+        />
       </div>
     );
   }
