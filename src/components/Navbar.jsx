@@ -7,6 +7,7 @@ const navLinks = [
   { name: 'Programs', href: '/programs' },
   { name: 'About', href: '/about' },
   { name: 'Blog', href: '/blog' },
+  { name: 'Login', href: '/signin' },
   { name: 'Apply', href: '/contact', isPrimary: true },
 ];
 

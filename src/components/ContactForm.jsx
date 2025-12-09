@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Send, Loader2, CheckCircle } from 'lucide-react';
+import { Send, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
+import { supabase } from '../lib/supabaseClient';
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -9,25 +10,43 @@ export default function ContactForm() {
     inquiryType: 'Course Inquiry',
     message: ''
   });
-  const [status, setStatus] = useState('idle'); // idle, submitting, success
+  const [status, setStatus] = useState('idle'); // idle, submitting, success, error
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus('submitting');
     
-    // Simulate network request
-    setTimeout(() => {
+    try {
+      // Send data to Supabase
+      const { error } = await supabase
+        .from('messages')
+        .insert([
+          { 
+            name: formData.name,
+            email: formData.email,
+            age: formData.age,
+            inquiry_type: formData.inquiryType,
+            message: formData.message
+          }
+        ]);
+
+      if (error) throw error;
+
       setStatus('success');
-      // Reset after 3 seconds
-      setTimeout(() => {
-        setStatus('idle');
-        setFormData({ ...formData, message: '' }); // Clear message only
-      }, 3000);
-    }, 1500);
+      setFormData({ name: '', email: '', age: '', inquiryType: 'Course Inquiry', message: '' }); // Reset Form
+      
+      // Reset status after 5 seconds
+      setTimeout(() => setStatus('idle'), 5000);
+
+    } catch (error) {
+      console.error('Error sending message:', error);
+      setStatus('error');
+      setTimeout(() => setStatus('idle'), 5000);
+    }
   };
 
   const inputClasses = "w-full px-5 py-4 rounded-xl bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:border-pelican-coral focus:ring-1 focus:ring-pelican-coral focus:bg-white/15 outline-none transition-all";
@@ -36,19 +55,38 @@ export default function ContactForm() {
   return (
     <div className="relative overflow-hidden bg-white/5 p-8 md:p-10 rounded-3xl border border-white/10 backdrop-blur-md shadow-2xl">
       
-      {/* Subtle top glow line */}
+      {/* Top Glow Line */}
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-pelican-coral to-transparent opacity-50"></div>
 
-      {/* SUCCESS NOTIFICATION OVERLAY */}
+      {/* SUCCESS OVERLAY */}
       {status === 'success' && (
-        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-[#020617]/90 backdrop-blur-md animate-fade-in">
+        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-[#020617]/95 backdrop-blur-md animate-fade-in text-center p-6">
           <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center text-green-500 mb-6 border border-green-500/30">
             <CheckCircle size={40} />
           </div>
           <h3 className="text-2xl font-heading text-white mb-2">Transmission Sent</h3>
-          <p className="text-slate-400 text-center max-w-xs">
-            Copy that, {formData.name}. We will be in touch shortly.
+          <p className="text-slate-400">
+            Copy that. Your message has been logged in the flight deck.
           </p>
+          <button onClick={() => setStatus('idle')} className="mt-6 text-sm text-pelican-coral hover:text-white underline">
+            Send another message
+          </button>
+        </div>
+      )}
+
+      {/* ERROR OVERLAY */}
+      {status === 'error' && (
+        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-[#020617]/95 backdrop-blur-md animate-fade-in text-center p-6">
+          <div className="w-20 h-20 bg-red-500/20 rounded-full flex items-center justify-center text-red-500 mb-6 border border-red-500/30">
+            <AlertCircle size={40} />
+          </div>
+          <h3 className="text-2xl font-heading text-white mb-2">Transmission Failed</h3>
+          <p className="text-slate-400">
+            Check your connection and try again.
+          </p>
+          <button onClick={() => setStatus('idle')} className="mt-6 text-sm text-pelican-coral hover:text-white underline">
+            Try Again
+          </button>
         </div>
       )}
 
@@ -87,7 +125,7 @@ export default function ContactForm() {
           <div>
             <label htmlFor="age" className={labelClasses}>Age</label>
             <input 
-              type="number" 
+              type="text" 
               name="age" 
               placeholder="18"
               className={inputClasses}

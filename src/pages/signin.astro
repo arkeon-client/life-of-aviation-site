@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import AuthForm from '../components/AuthForms';
+import AuroraBackground from '../components/ui/AuroraBackground.astro';
+---
+
+<BaseLayout title="Sign In">
+  <div class="min-h-screen flex items-center justify-center relative overflow-hidden pt-20 pb-20 px-4">
+    <AuroraBackground />
+    <div class="relative z-10 w-full">
+      <AuthForm client:load type="login" />
+    </div>
+  </div>
+</BaseLayout>
