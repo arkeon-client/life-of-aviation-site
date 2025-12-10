@@ -1,59 +1,8 @@
 ---
 import DashboardLayout from '../../layouts/DashboardLayout.astro';
-import SpotlightCard from '../../components/ui/SpotlightCard';
-import { Clock, CheckCircle, Book, Award } from 'lucide-react';
+import UserOverview from '../../components/dashboard/UserOverview';
 ---
 
 <DashboardLayout>
-  
-  <!-- Stats Grid -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-    <!-- Application Status -->
-    <SpotlightCard client:load className="bg-white/5 border border-white/10 p-6">
-      <div class="flex items-start justify-between mb-4">
-        <div class="p-3 bg-blue-500/10 rounded-lg text-blue-400">
-          <Clock size={24} />
-        </div>
-        <span class="text-xs font-bold uppercase tracking-widest text-slate-500">Status</span>
-      </div>
-      <h3 class="text-2xl text-white font-bold mb-1">In Review</h3>
-      <p class="text-slate-400 text-sm">Your application is being processed.</p>
-    </SpotlightCard>
-
-    <!-- Enrolled Courses -->
-    <SpotlightCard client:load className="bg-white/5 border border-white/10 p-6">
-      <div class="flex items-start justify-between mb-4">
-        <div class="p-3 bg-pelican-coral/10 rounded-lg text-pelican-coral">
-          <Book size={24} />
-        </div>
-        <span class="text-xs font-bold uppercase tracking-widest text-slate-500">Courses</span>
-      </div>
-      <h3 class="text-2xl text-white font-bold mb-1">0 Active</h3>
-      <p class="text-slate-400 text-sm">Browse programs to enroll.</p>
-    </SpotlightCard>
-
-    <!-- Achievements -->
-    <SpotlightCard client:load className="bg-white/5 border border-white/10 p-6">
-      <div class="flex items-start justify-between mb-4">
-        <div class="p-3 bg-purple-500/10 rounded-lg text-purple-400">
-          <Award size={24} />
-        </div>
-        <span class="text-xs font-bold uppercase tracking-widest text-slate-500">Rank</span>
-      </div>
-      <h3 class="text-2xl text-white font-bold mb-1">Cadet</h3>
-      <p class="text-slate-400 text-sm">Complete courses to level up.</p>
-    </SpotlightCard>
-  </div>
-
-  <!-- Recent Activity / Empty State -->
-  <div class="bg-white/5 border border-white/10 rounded-2xl p-8 text-center min-h-[300px] flex flex-col items-center justify-center">
-    <div class="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mb-4 text-slate-500">
-      <CheckCircle size={32} />
-    </div>
-    <h3 class="text-xl text-white font-heading mb-2">All Systems Nominal</h3>
-    <p class="text-slate-400 max-w-sm">
-      You have no upcoming classes or notifications. Check out the <a href="/programs" class="text-pelican-coral hover:underline">Programs page</a> to start your journey.
-    </p>
-  </div>
-
+  <UserOverview client:only="react" />
 </DashboardLayout>

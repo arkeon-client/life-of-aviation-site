@@ -1,7 +1,7 @@
 ---
 // src/components/Footer.astro
 import PelicanIcon from './PelicanIcon';
-import { Instagram, Linkedin, Send, Phone, Mail, Check, ExternalLink } from 'lucide-react';
+import { Instagram, Linkedin, Send, Phone, Mail, Check, ExternalLink, MessageSquare } from 'lucide-react';
 
 const currentYear = new Date().getFullYear();
 ---
@@ -21,32 +21,36 @@ const currentYear = new Date().getFullYear();
           <span class="font-heading text-2xl text-white">Life of Aviation</span>
         </div>
         <p class="text-slate-400 text-sm leading-relaxed max-w-sm mb-6">
-          Ethiopia’s premier independent aviation tutoring initiative. Turning dreams into careers.
+          Ethiopia’s first independent aviation tutoring, mentorship, and storytelling platform.
         </p>
         <div class="space-y-3 mb-6">
-          <a href="tel:+251911123456" class="flex items-center text-slate-300 hover:text-pelican-coral transition-colors text-sm font-medium">
-            <Phone className="w-4 h-4 mr-3" /> +251 9XX XXX XXX
+          <a href="tel:+251991882942" class="flex items-center text-slate-300 hover:text-pelican-coral transition-colors text-sm font-medium">
+            <Phone className="w-4 h-4 mr-3" /> +251 991 882 942
           </a>
-          <a href="mailto:info@lifeofaviation.com" class="flex items-center text-slate-300 hover:text-pelican-coral transition-colors text-sm font-medium">
-            <Mail className="w-4 h-4 mr-3" /> info@lifeofaviation.com
+          <a href="mailto:abelyirdaw3@gmail.com" class="flex items-center text-slate-300 hover:text-pelican-coral transition-colors text-sm font-medium">
+            <Mail className="w-4 h-4 mr-3" /> abelyirdaw3@gmail.com
           </a>
         </div>
         
         {/* Social Icons */}
         <div class="flex space-x-3">
+          {/* Instagram */}
           <a href="#" target="_blank" class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-pelican-coral hover:border-pelican-coral hover:-translate-y-1 transition-all">
             <Instagram className="w-5 h-5" />
           </a>
+          
+          {/* TikTok */}
           <a href="#" target="_blank" class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-pelican-coral hover:border-pelican-coral hover:-translate-y-1 transition-all">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
+          </a>
+
+          {/* LinkedIn */}
+          <a href="https://www.linkedin.com/in/abel-yirdaw-48b275220" target="_blank" class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-pelican-coral hover:border-pelican-coral hover:-translate-y-1 transition-all">
             <Linkedin className="w-5 h-5" />
           </a>
-          {/* TikTok Icon (Custom SVG) */}
-          <a href="#" target="_blank" class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-pelican-coral hover:border-pelican-coral hover:-translate-y-1 transition-all">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/>
-            </svg>
-          </a>
-          <a href="https://t.me/" target="_blank" class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-pelican-coral hover:border-pelican-coral hover:-translate-y-1 transition-all">
+
+          {/* Telegram Channel */}
+          <a href="https://t.me/lifeofaviation" target="_blank" class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-pelican-coral hover:border-pelican-coral hover:-translate-y-1 transition-all">
             <Send className="w-5 h-5" />
           </a>
         </div>
@@ -98,7 +102,7 @@ const currentYear = new Date().getFullYear();
 
     {/* Bottom Bar with Developer Credit */}
     <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-slate-600 font-medium uppercase tracking-widest gap-4">
-      <p>&copy; {currentYear} Life of Aviation. All rights reserved.</p>
+      <p>&copy; {currentYear} Life of Aviation by Abel. All rights reserved.</p>
       
       <div class="flex flex-col md:flex-row items-center gap-4">
         <span class="opacity-50">Addis Ababa, Ethiopia</span>

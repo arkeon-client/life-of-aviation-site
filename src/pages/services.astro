@@ -1,0 +1,179 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import AuroraBackground from '../components/ui/AuroraBackground.astro';
+import SpotlightCard from '../components/ui/SpotlightCard';
+import { Video, Camera, Award, CheckCircle, ArrowRight, Star } from 'lucide-react';
+---
+
+<BaseLayout title="Services & Partnerships" description="Professional media, storytelling, and sponsorship opportunities for aviation companies.">
+  
+  <div class="relative pt-32 pb-24 overflow-hidden">
+    <AuroraBackground />
+
+    <div class="max-w-7xl mx-auto px-4 relative z-10">
+      
+      {/* Hero */}
+      <div class="text-center max-w-3xl mx-auto mb-24">
+        <h1 class="font-heading text-5xl md:text-6xl font-bold text-white mb-6">
+          Partner with <span class="text-pelican-coral">Excellence</span>
+        </h1>
+        <p class="text-xl text-slate-300 leading-relaxed">
+          Documentary-style storytelling, high-impact promotion, and sponsorship opportunities for Ethiopia's aviation industry.
+        </p>
+      </div>
+
+      <div class="space-y-32">
+
+        {/* SERVICE 3: Company Features */}
+        <section id="features" class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div data-aos="fade-right">
+            <div class="flex items-center gap-3 text-pelican-coral font-bold tracking-widest uppercase mb-4">
+              <Camera size={24} />
+              <span>Service</span>
+            </div>
+            <h2 class="font-heading text-4xl text-white mb-6">Aviation Company Features & Guest Showcases</h2>
+            <p class="text-slate-300 text-lg mb-8 leading-relaxed">
+              Documentary-style storytelling meets high-impact aviation promotion. We bring the industry to life by featuring organizations through cinematic visuals and authentic interviews.
+            </p>
+            
+            <div class="space-y-4 mb-8">
+              <div class="flex gap-4">
+                <CheckCircle className="text-pelican-coral shrink-0" />
+                <p class="text-slate-400 text-sm"><strong>On-Site Filming:</strong> We capture real operations at your facility for a documentary-level experience.</p>
+              </div>
+              <div class="flex gap-4">
+                <CheckCircle className="text-pelican-coral shrink-0" />
+                <p class="text-slate-400 text-sm"><strong>Executive Interviews:</strong> Leaders share insights, culture, and vision.</p>
+              </div>
+              <div class="flex gap-4">
+                <CheckCircle className="text-pelican-coral shrink-0" />
+                <p class="text-slate-400 text-sm"><strong>Promotional Spotlight:</strong> Use the content for recruitment, brand visibility, and stakeholder communication.</p>
+              </div>
+            </div>
+
+            <a href="/contact" class="inline-flex items-center px-8 py-4 bg-white text-[#020617] font-bold rounded-xl hover:bg-pelican-coral hover:text-white transition-all">
+              Request a Feature
+            </a>
+          </div>
+          <div data-aos="fade-left" class="relative">
+             <SpotlightCard className="bg-[#020617]/50 border border-white/10 aspect-video flex items-center justify-center group">
+                <div class="text-center">
+                   <div class="w-20 h-20 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform text-white">
+                      <Camera size={40} />
+                   </div>
+                   <p class="text-slate-500 font-mono text-sm">Cinematic Production</p>
+                </div>
+             </SpotlightCard>
+          </div>
+        </section>
+
+        {/* SERVICE 4: One-Time Video */}
+        <section id="content" class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center lg:flex-row-reverse">
+          <div class="order-2 lg:order-1" data-aos="fade-right">
+             <SpotlightCard className="bg-[#020617]/50 border border-white/10 aspect-video flex items-center justify-center group">
+                <div class="text-center">
+                   <div class="w-20 h-20 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform text-white">
+                      <Video size={40} />
+                   </div>
+                   <p class="text-slate-500 font-mono text-sm">Educational & Promotional</p>
+                </div>
+             </SpotlightCard>
+          </div>
+          <div class="order-1 lg:order-2" data-aos="fade-left">
+            <div class="flex items-center gap-3 text-blue-400 font-bold tracking-widest uppercase mb-4">
+              <Video size={24} />
+              <span>Service</span>
+            </div>
+            <h2 class="font-heading text-4xl text-white mb-6">Professional Content Creation</h2>
+            <p class="text-slate-300 text-lg mb-8 leading-relaxed">
+              A high-impact service for companies launching a new product, service, or campaign. We combine professional storytelling with educational clarity.
+            </p>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+              <div class="bg-white/5 p-4 rounded-lg border border-white/10">
+                <h4 class="text-white font-bold mb-2">Educational Breakdown</h4>
+                <p class="text-xs text-slate-400">We explain technical details in simple, aviation-friendly language.</p>
+              </div>
+              <div class="bg-white/5 p-4 rounded-lg border border-white/10">
+                <h4 class="text-white font-bold mb-2">Brand-Aligned</h4>
+                <p class="text-xs text-slate-400">Your identity and mission are integrated naturally into the script.</p>
+              </div>
+            </div>
+
+            <a href="/contact" class="inline-flex items-center px-8 py-4 bg-white/5 border border-white/20 text-white font-bold rounded-xl hover:bg-white hover:text-[#020617] transition-all">
+              Start a Project <ArrowRight className="ml-2 w-5 h-5" />
+            </a>
+          </div>
+        </section>
+
+        {/* SERVICE 5: Sponsorships */}
+        <section id="sponsorship" class="text-center max-w-5xl mx-auto">
+          <div class="mb-16">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl mb-6 shadow-lg shadow-orange-500/20 text-white">
+              <Award size={32} />
+            </div>
+            <h2 class="font-heading text-4xl md:text-5xl text-white mb-6">Sponsorship Packages</h2>
+            <p class="text-xl text-slate-300 max-w-3xl mx-auto">
+              Partner with Ethiopia’s leading independent aviation education platform. Your sponsorship directly supports the next generation of aviators.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Platinum */}
+            <div class="bg-gradient-to-b from-slate-800 to-[#020617] border border-slate-700 p-8 rounded-2xl relative group hover:-translate-y-2 transition-transform duration-300">
+              <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-gray-200 via-white to-gray-200"></div>
+              <h3 class="text-2xl font-heading text-white mb-2">Platinum</h3>
+              <p class="text-xs text-slate-400 uppercase tracking-widest mb-6">Maximum Visibility</p>
+              <ul class="text-left space-y-3 text-sm text-slate-300 mb-8">
+                <li class="flex gap-2"><CheckCircle size={16} class="text-white shrink-0"/> All Content Mentions</li>
+                <li class="flex gap-2"><CheckCircle size={16} class="text-white shrink-0"/> Logo on Slides</li>
+                <li class="flex gap-2"><CheckCircle size={16} class="text-white shrink-0"/> Spotlight Video</li>
+              </ul>
+            </div>
+
+            {/* Gold */}
+            <div class="bg-gradient-to-b from-slate-800 to-[#020617] border border-yellow-500/30 p-8 rounded-2xl relative group hover:-translate-y-2 transition-transform duration-300 shadow-lg shadow-yellow-500/10">
+              <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-yellow-600 via-yellow-400 to-yellow-600"></div>
+              <h3 class="text-2xl font-heading text-yellow-400 mb-2">Gold</h3>
+              <p class="text-xs text-slate-400 uppercase tracking-widest mb-6">High-Level Exposure</p>
+              <ul class="text-left space-y-3 text-sm text-slate-300 mb-8">
+                <li class="flex gap-2"><CheckCircle size={16} class="text-yellow-400 shrink-0"/> Event Mentions</li>
+                <li class="flex gap-2"><CheckCircle size={16} class="text-yellow-400 shrink-0"/> Social Media Features</li>
+                <li class="flex gap-2"><CheckCircle size={16} class="text-yellow-400 shrink-0"/> Student Handouts</li>
+              </ul>
+            </div>
+
+            {/* Silver */}
+            <div class="bg-gradient-to-b from-slate-800 to-[#020617] border border-slate-700 p-8 rounded-2xl relative group hover:-translate-y-2 transition-transform duration-300">
+              <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-slate-400 via-slate-200 to-slate-400"></div>
+              <h3 class="text-2xl font-heading text-slate-200 mb-2">Silver</h3>
+              <p class="text-xs text-slate-400 uppercase tracking-widest mb-6">Focused Visibility</p>
+              <ul class="text-left space-y-3 text-sm text-slate-300 mb-8">
+                <li class="flex gap-2"><CheckCircle size={16} class="text-slate-400 shrink-0"/> Content Shoutouts</li>
+                <li class="flex gap-2"><CheckCircle size={16} class="text-slate-400 shrink-0"/> Selected Graphics</li>
+              </ul>
+            </div>
+
+            {/* Community */}
+            <div class="bg-gradient-to-b from-slate-800 to-[#020617] border border-slate-700 p-8 rounded-2xl relative group hover:-translate-y-2 transition-transform duration-300">
+              <div class="absolute top-0 inset-x-0 h-1 bg-pelican-coral"></div>
+              <h3 class="text-2xl font-heading text-pelican-coral mb-2">Community</h3>
+              <p class="text-xs text-slate-400 uppercase tracking-widest mb-6">Entry-Level Support</p>
+              <ul class="text-left space-y-3 text-sm text-slate-300 mb-8">
+                <li class="flex gap-2"><CheckCircle size={16} class="text-pelican-coral shrink-0"/> Website Listing</li>
+                <li class="flex gap-2"><CheckCircle size={16} class="text-pelican-coral shrink-0"/> Community Thanks</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="mt-12">
+            <a href="/contact" class="inline-flex items-center px-10 py-4 bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-bold rounded-xl hover:shadow-lg hover:shadow-orange-500/30 transition-all transform hover:-translate-y-1">
+              Become a Sponsor
+            </a>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+</BaseLayout>

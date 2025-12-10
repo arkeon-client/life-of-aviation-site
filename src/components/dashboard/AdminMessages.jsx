@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabaseClient';
-import { ADMIN_EMAILS } from '../../lib/constants'; // Updated import
+import { ADMIN_EMAILS } from '../../lib/constants';
 import { Inbox, User, Calendar, Mail, Loader2, AlertTriangle, ShieldAlert } from 'lucide-react';
 
 export default function AdminMessages() {
@@ -20,7 +20,7 @@ export default function AdminMessages() {
           return;
         }
 
-        // UPDATED LOGIC: If logged in but email is NOT in list
+        // If logged in but email is NOT in list
         if (!ADMIN_EMAILS.includes(user.email)) {
           console.warn("Unauthorized Access: User is not Admin");
           window.location.href = '/dashboard';
@@ -132,9 +132,11 @@ export default function AdminMessages() {
                 </div>
               </div>
 
-              {/* Action Button */}
+              {/* Action Button - OPENS IN NEW TAB */}
               <a 
-                href={`mailto:${msg.email}?subject=Re: Your Inquiry to Life of Aviation`} 
+                href={`mailto:${msg.email}?subject=Re: Your Inquiry to Life of Aviation`}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="px-6 py-3 bg-white/5 hover:bg-pelican-coral hover:text-white border border-white/10 text-white text-sm font-bold rounded-xl transition-all whitespace-nowrap flex items-center justify-center gap-2 group/btn"
               >
                 <Mail size={16} />

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Home, BookOpen, Settings, LogOut, Menu, X, ShieldAlert, Users, FileText, Inbox } from 'lucide-react';
+import { Home, BookOpen, Settings, LogOut, Menu, X, ShieldAlert, Users, FileText, Inbox, PenTool, Megaphone } from 'lucide-react';
 import PelicanIcon from '../PelicanIcon';
 import { supabase } from '../../lib/supabaseClient';
 import { ADMIN_EMAILS } from '../../lib/constants'; // Updated import
@@ -14,6 +14,8 @@ const adminItems = [
   { name: 'Command Center', icon: Inbox, href: '/admin/dashboard' },
   { name: 'Enrollments', icon: FileText, href: '/admin/enrollments' },
   { name: 'Course Manager', icon: BookOpen, href: '/admin/courses' },
+  { name: 'Blog Manager', icon: PenTool, href: '/admin/blog' },
+  { name: 'Announcements', icon: Megaphone, href: '/admin/announcements' },
   { name: 'User Manager', icon: Users, href: '/admin/users' },
 ];
 

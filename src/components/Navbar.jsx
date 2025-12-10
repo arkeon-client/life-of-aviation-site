@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Instagram, Linkedin, Send } from 'lucide-react';
+import { Menu, X, Instagram, Linkedin, Send, MessageSquare } from 'lucide-react';
 import PelicanIcon from './PelicanIcon';
-import ChristmasLights from './ui/ChristmasLights'; // Ensure imported
+import ChristmasLights from './ui/ChristmasLights';
 
 const navLinks = [
   { name: 'Home', href: '/' },
   { name: 'Programs', href: '/programs' },
+  { name: 'Services', href: '/services' },
   { name: 'About', href: '/about' },
   { name: 'Blog', href: '/blog' },
   { name: 'Login', href: '/signin' },
-  { name: 'Apply', href: '/contact', isPrimary: true },
+  { name: 'Contact', href: '/contact', isPrimary: true },
 ];
 
 export default function Navbar() {
@@ -39,17 +40,16 @@ export default function Navbar() {
         {/* WRAPPER */}
         <div className="relative mx-auto max-w-5xl group">
           
-          {/* 1. CHRISTMAS LIGHTS (Z-Index 30: On top of the border) */}
+          {/* CHRISTMAS LIGHTS */}
           <div className="absolute top-0 left-0 w-full z-30">
              <ChristmasLights />
           </div>
 
-          {/* 2. THE NAVBAR PILL (Z-Index 20) */}
+          {/* NAVBAR PILL */}
           <div className={`relative z-20 rounded-full p-[1.5px] animate-border-flow bg-gradient-to-r from-transparent via-pelican-coral via-white/50 to-transparent bg-[length:200%_auto] shadow-[0_0_20px_rgba(0,0,0,0.5)] transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,111,97,0.3)]`}>
             <div className={`rounded-full bg-[#020617]/90 backdrop-blur-xl h-full w-full ${scrolled ? 'py-2' : 'py-3'}`}>
               <div className="px-6 flex items-center justify-between">
                 
-                {/* Logo */}
                 <a href="/" className="flex items-center space-x-2 group">
                   <div className="text-pelican-coral transition-transform transform group-hover:rotate-12 group-hover:scale-110 duration-300">
                     <PelicanIcon className="w-6 h-6" />
@@ -59,7 +59,6 @@ export default function Navbar() {
                   </span>
                 </a>
 
-                {/* Desktop Menu */}
                 <div className="hidden md:flex items-center space-x-8">
                   {navLinks.map((link) => (
                     <a
@@ -76,7 +75,6 @@ export default function Navbar() {
                   ))}
                 </div>
 
-                {/* Mobile Toggle */}
                 <div className="md:hidden">
                   <button 
                     onClick={() => setIsOpen(!isOpen)} 
@@ -120,13 +118,14 @@ export default function Navbar() {
                 <X size={24} />
              </button>
 
+             {/* Mobile Sidebar Socials */}
              <div className="flex flex-col space-y-8">
                 <a href="#" className="text-slate-400 hover:text-pelican-coral hover:scale-125 transition-all"><Instagram size={24} /></a>
-                <a href="#" className="text-slate-400 hover:text-pelican-coral hover:scale-125 transition-all"><Linkedin size={24} /></a>
+                <a href="https://www.linkedin.com/in/abel-yirdaw-48b275220" target="_blank" className="text-slate-400 hover:text-pelican-coral hover:scale-125 transition-all"><Linkedin size={24} /></a>
                 <a href="#" className="text-slate-400 hover:text-pelican-coral hover:scale-125 transition-all">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
                 </a>
-                <a href="https://t.me/" className="text-slate-400 hover:text-pelican-coral hover:scale-125 transition-all"><Send size={24} /></a>
+                <a href="https://t.me/lifeofaviation" target="_blank" className="text-slate-400 hover:text-pelican-coral hover:scale-125 transition-all"><Send size={24} /></a>
              </div>
 
              <div className="w-[1px] h-20 bg-gradient-to-b from-transparent to-pelican-coral/50"></div>

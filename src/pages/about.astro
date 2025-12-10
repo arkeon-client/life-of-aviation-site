@@ -1,9 +1,9 @@
 ---
-// src/pages/about.astro
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PelicanIcon from '../components/PelicanIcon';
 import SpotlightCard from '../components/ui/SpotlightCard';
 import AuroraBackground from '../components/ui/AuroraBackground.astro';
+import { Target, Heart, Globe, Users } from 'lucide-react';
 ---
 
 <BaseLayout title="About Us">
@@ -14,79 +14,80 @@ import AuroraBackground from '../components/ui/AuroraBackground.astro';
     {/* Hero */}
     <div class="max-w-4xl mx-auto px-4 text-center relative z-10 mb-20">
       <h1 class="font-heading text-6xl md:text-7xl font-bold mb-8 text-white" data-aos="fade-down">
-        The <span class="text-pelican-coral">Story</span>
+        Who <span class="text-pelican-coral">We Are</span>
       </h1>
       <p class="text-xl md:text-2xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
-        Bridging the gap between strict aviation standards and warm mentorship.
+        Ethiopia’s first independent aviation tutoring, mentorship, and storytelling platform.
       </p>
     </div>
 
-    {/* Founder Section */}
+    {/* Mission Block */}
+    <div class="max-w-5xl mx-auto px-4 relative z-10 mb-32">
+        <SpotlightCard client:visible className="bg-[#020617]/50 border border-white/10 p-8 md:p-12">
+            <div class="text-center mb-10">
+                <PelicanIcon className="w-16 h-16 text-pelican-coral mx-auto mb-6" />
+                <h2 className="text-3xl font-heading text-white">Our Purpose</h2>
+            </div>
+            <div class="prose prose-lg prose-invert mx-auto text-center text-slate-300">
+                <p>
+                    We exist for dreamers: aspiring pilots, engineers, air traffic controllers, and aviation managers. 
+                    Built on the values of <strong>creativity, curiosity, reliability, and professionalism</strong>, 
+                    we bring aviation education to life through accessible teaching and real-world insights.
+                </p>
+            </div>
+        </SpotlightCard>
+    </div>
+
+    {/* The Pelican Story */}
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 mb-32">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-        
         <div data-aos="fade-right">
-          <div class="relative rounded-3xl overflow-hidden border border-white/10 shadow-2xl group">
-             <div class="absolute inset-0 bg-gradient-to-t from-[#020617] to-transparent opacity-60 z-10"></div>
-             <!-- Placeholder for Abel's Photo -->
-             <div class="aspect-[3/4] bg-slate-800 flex items-center justify-center relative">
-                <span class="text-slate-500 font-heading text-2xl z-0">Abel's Photo</span>
-                <img src="/images/abel.jpg" class="absolute inset-0 w-full h-full object-cover" />
-             </div>
-             
-             <div class="absolute bottom-8 left-8 z-20">
-               <h3 class="text-3xl font-heading text-white">Abel</h3>
-               <p class="text-pelican-coral font-bold tracking-widest uppercase text-sm">Founder & Captain</p>
-             </div>
-          </div>
+            <h2 className="font-heading text-4xl text-white mb-6">The Meaning of <span class="text-pelican-coral">ጳልቃ</span></h2>
+            <p class="text-lg text-slate-300 mb-6 leading-relaxed">
+                A unique element of our identity is the pelican icon. In Ethiopian tradition (ጳልቃ), the pelican represents love, sacrifice, and devotion. It reflects our commitment to guiding students with the same level of dedication.
+            </p>
+            <p class="text-lg text-slate-300 italic border-l-2 border-pelican-coral pl-4">
+                "It is a reminder that aviation is not only about flying—it is about purpose, growth, and service."
+            </p>
         </div>
-
-        <div data-aos="fade-left">
-          <SpotlightCard client:visible className="bg-white/5 border border-white/10 p-10">
-            <h2 class="font-heading text-4xl text-white mb-6">Meet the Pilot</h2>
-            <div class="prose prose-lg prose-invert text-slate-300 font-light">
-              <p class="mb-6">
-                "Even though many experts advised me not to include this symbol in my brand because it’s connected to religion, I personally admire it deeply. For me, it represents love, sacrifice, and devotion."
-              </p>
-              <p>
-                Life of Aviation was born from a desire to democratize access to aviation knowledge in Ethiopia. We aren't just teaching you how to fly; we are teaching you the discipline, the history, and the character required to command the skies.
-              </p>
+        <div data-aos="fade-left" class="flex justify-center">
+            <div class="relative">
+                <div class="absolute inset-0 bg-pelican-coral/20 blur-[100px] rounded-full"></div>
+                <PelicanIcon className="w-64 h-64 text-white relative z-10 drop-shadow-2xl" />
             </div>
-          </SpotlightCard>
         </div>
       </div>
     </div>
 
-    {/*  The Pelican Story (Bilingual) */}
-    <div class="max-w-5xl mx-auto px-4 relative z-10">
-      <div class="relative bg-gradient-to-br from-white/10 to-transparent border border-white/10 rounded-[3rem] p-8 md:p-16 overflow-hidden">
-        
-        {/* Giant Icon Background */}
-        <div class="absolute -right-20 -bottom-20 opacity-10 pointer-events-none rotate-12">
-          <PelicanIcon className="w-[500px] h-[500px] text-white" />
+    {/* Future Goals */}
+    <div class="max-w-6xl mx-auto px-4 relative z-10">
+        <div class="text-center mb-16">
+            <h2 class="font-heading text-4xl text-white">Our Future Vision</h2>
+            <p class="text-slate-400 mt-2">To become the leading aviation education hub in Africa.</p>
         </div>
 
-        <div class="relative z-10 text-center">
-          <div class="w-20 h-20 bg-pelican-coral/20 rounded-full flex items-center justify-center mx-auto mb-10 text-pelican-coral border border-pelican-coral/30">
-            <PelicanIcon className="w-10 h-10" />
-          </div>
-
-          <h2 class="font-heading text-4xl md:text-5xl text-white mb-10">The Meaning of <span class="text-pelican-coral">ጳልቃ</span></h2>
-          
-          <p class="text-xl text-slate-200 leading-relaxed mb-12 max-w-3xl mx-auto">
-            A special element that makes this platform unique is the use of a pelican icon. It represents true love, and in the Ethiopian Orthodox Church we call it ጳልቃ.
-          </p>
-
-          {/* Amharic Block - Highlighted */}
-          <div class="bg-[#020617]/50 backdrop-blur-md border border-pelican-coral/30 p-10 rounded-2xl text-left shadow-2xl relative overflow-hidden" data-aos="fade-up">
-            <div class="absolute top-0 left-0 w-1 h-full bg-pelican-coral"></div>
-            <p class="amharic-text text-2xl leading-10 text-white font-medium tracking-wide">
-              "በነጮቹ ደግሞ pelican ፐሊካን ተብላ ትታወቃለች ለልጆቿ ባላት ልዩና ጽኑ ፍቅር ምክንያት የኢየሱስ ክርስቶስ ምሳሌ ተደርጋ ትወሰዳለች። ጳልቃ፥ የጠኔ ጊዜ መጥቶ የሚጫር የሚቀመስ በየብስና በባሕር አንዳች ምግብ ካጣች፣ ከራሷ አካል በጥፍሯ ደሟን አፍስሳ ሥጋዋን መንትፋ ለልጆቿ ሰጥታ ክፉውን ቀን ታሻግራለች።"
-            </p>
-          </div>
-
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-white/5 p-6 rounded-xl border border-white/10 hover:border-pelican-coral/50 transition-colors">
+                <Globe className="text-blue-400 mb-4 w-8 h-8" />
+                <h3 class="text-white font-bold mb-2">Expansion</h3>
+                <p class="text-sm text-slate-400">Collaborate with airlines and schools across Africa.</p>
+            </div>
+            <div class="bg-white/5 p-6 rounded-xl border border-white/10 hover:border-pelican-coral/50 transition-colors">
+                <Target className="text-pelican-coral mb-4 w-8 h-8" />
+                <h3 class="text-white font-bold mb-2">Physical Center</h3>
+                <p class="text-sm text-slate-400">Build a training and mentorship hub in Addis Ababa.</p>
+            </div>
+            <div class="bg-white/5 p-6 rounded-xl border border-white/10 hover:border-pelican-coral/50 transition-colors">
+                <Users className="text-green-400 mb-4 w-8 h-8" />
+                <h3 class="text-white font-bold mb-2">Job Placement</h3>
+                <p class="text-sm text-slate-400">Support internships for hundreds of students.</p>
+            </div>
+            <div class="bg-white/5 p-6 rounded-xl border border-white/10 hover:border-pelican-coral/50 transition-colors">
+                <Heart className="text-purple-400 mb-4 w-8 h-8" />
+                <h3 class="text-white font-bold mb-2">Scholarships</h3>
+                <p class="text-sm text-slate-400">Create opportunities for underserved youth.</p>
+            </div>
         </div>
-      </div>
     </div>
 
   </section>

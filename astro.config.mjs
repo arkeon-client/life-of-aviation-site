@@ -2,15 +2,17 @@
 import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
 import react from '@astrojs/react';
+import netlify from '@astrojs/netlify';
 
-// https://astro.build/config
 export default defineConfig({
+  // CHANGE 1: Set output to 'server'
+  output: 'server',
+  
   integrations: [
-    tailwind({
-      // Disabling base styles here allows us to control them in global.css if needed,
-      // but keeping it true is standard for rapid development.
-      applyBaseStyles: true,
-    }), 
+    tailwind({ applyBaseStyles: true }), 
     react()
   ],
+  
+  // CHANGE 2: Ensure adapter is set
+  adapter: netlify(),
 });

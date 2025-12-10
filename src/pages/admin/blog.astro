@@ -1,0 +1,10 @@
+---
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import AdminBlogManager from '../../components/dashboard/AdminBlogManager';
+---
+
+<DashboardLayout>
+  <div class="pt-8">
+    <AdminBlogManager client:only="react" />
+  </div>
+</DashboardLayout>
