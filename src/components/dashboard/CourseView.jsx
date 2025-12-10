@@ -1,38 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabaseClient';
-import { Lock, CheckCircle, Send, FileText, PlayCircle, Download, XCircle, ExternalLink, RefreshCw, Loader2, BookOpen, List } from 'lucide-react';
+import { Lock, CheckCircle, Send, FileText, PlayCircle, Download, XCircle, ExternalLink, RefreshCw, Loader2, List } from 'lucide-react';
 import ActionModal from '../ui/ActionModal';
-
-// STATIC SYLLABUS CONTENT (From your prompt)
-const SYLLABUS = {
-  'aerogenesis': [
-    { week: 'Week 1', title: 'Introduction to Aviation & History', desc: 'First flights, pioneers of aviation, evolution of airplanes, fun aviation facts.' },
-    { week: 'Week 2', title: 'Aircraft Design & Systems', desc: 'How airplanes are built, wings, engines, control surfaces, simple aerodynamics.' },
-    { week: 'Week 3', title: 'Flight Operations', desc: 'Takeoff, cruising, landing, flight planning, and basic pilot workflow.' },
-    { week: 'Week 4', title: 'Air Traffic Control (ATC)', desc: 'Communication, radar, flight paths, safety, and coordination with pilots.' },
-    { week: 'Week 5', title: 'Aviation Safety & Problem-Solving', desc: 'Checklists, safety procedures, real-life scenario problem-solving activities.' },
-    { week: 'Week 6', title: 'Aviation Regulations', desc: 'ICAO, FAA, ECAA, IATA, why rules exist, and classroom group activities.' },
-    { week: 'Week 7', title: 'Aviation Management', desc: 'How airlines and airports are organized, teamwork, operations, and logistics.' },
-    { week: 'Week 8', title: 'Aviation Technology', desc: 'Jet engines, autopilot, avionics, GPS, radar, black box, and future innovations.' },
-    { week: 'Week 9', title: 'Aviation Careers', desc: 'Pilots, engineers, air traffic controllers, cabin crew, airport management.' },
-    { week: 'Week 10', title: 'Industry Trends', desc: 'Green aviation, AI, drones, supersonic jets, urban air mobility, space tourism.' },
-    { week: 'Week 11', title: 'Career Pathways', desc: 'Personal aviation dream plan, exploring career paths, preparing for the future.' },
-    { week: 'Week 12', title: 'Graduation & Showcase', desc: 'Review, project showcase, reflection activity, certificates, and inspiration.' },
-  ],
-  'mentorship': [
-    { week: 'Step 1', title: 'Personal Career Assessment', desc: 'Evaluate strengths, interests, and aviation goals to discover your path.' },
-    { week: 'Step 2', title: 'Job Market Orientation', desc: 'Understanding hiring inside airlines, airports, and support companies.' },
-    { week: 'Step 3', title: 'Profile Building', desc: 'Guidance on CV, cover letters, LinkedIn, and digital branding.' },
-    { week: 'Step 4', title: 'Competitiveness Coaching', desc: 'How to present yourself and communicate value in interviews.' },
-    { week: 'Step 5', title: 'Pathway to Opportunities', desc: 'Direction on internships, entry-level positions, and skill-building.' },
-  ]
-};
 
 export default function CourseView({ courseId }) {
   const [loading, setLoading] = useState(true);
   const [enrollment, setEnrollment] = useState(null);
   const [modules, setModules] = useState([]);
-  const [activeTab, setActiveTab] = useState('modules'); // 'modules' or 'syllabus'
+  const [syllabus, setSyllabus] = useState([]); // NEW STATE
+  const [activeTab, setActiveTab] = useState('modules');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
@@ -40,15 +16,24 @@ export default function CourseView({ courseId }) {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
+      // 1. Enrollment
       const { data: enrollData } = await supabase
         .from('enrollments')
         .select('*')
         .eq('user_id', user.id)
         .eq('course_id', courseId)
         .single();
-      
       setEnrollment(enrollData);
 
+      // 2. Fetch Syllabus (Always visible even if pending)
+      const { data: sylData } = await supabase
+        .from('course_syllabus')
+        .select('*')
+        .eq('course_id', courseId)
+        .order('order_index', { ascending: true });
+      setSyllabus(sylData || []);
+
+      // 3. Fetch Modules (Only if active)
       if (enrollData?.status === 'active') {
         const { data: modData } = await supabase
           .from('course_materials')
@@ -116,7 +101,6 @@ export default function CourseView({ courseId }) {
   // ACTIVE STATE
   return (
     <div className="max-w-6xl mx-auto animate-fade-in">
-      {/* Header */}
       <div className="mb-8 border-b border-white/10 pb-6 flex flex-col md:flex-row justify-between md:items-end gap-4">
         <div>
           <div className="flex items-center gap-2 text-green-400 mb-2 bg-green-500/10 px-3 py-1 rounded-full w-fit border border-green-500/20">
@@ -127,71 +111,54 @@ export default function CourseView({ courseId }) {
         
         {/* TABS */}
         <div className="flex bg-white/5 p-1 rounded-lg">
-            <button 
-                onClick={() => setActiveTab('modules')}
-                className={`px-4 py-2 rounded-md text-sm font-bold transition-all flex items-center gap-2 ${activeTab === 'modules' ? 'bg-pelican-coral text-white shadow-lg' : 'text-slate-400 hover:text-white'}`}
-            >
+            <button onClick={() => setActiveTab('modules')} className={`px-4 py-2 rounded-md text-sm font-bold transition-all flex items-center gap-2 ${activeTab === 'modules' ? 'bg-pelican-coral text-white shadow-lg' : 'text-slate-400 hover:text-white'}`}>
                 <FileText size={16} /> Resources
             </button>
-            <button 
-                onClick={() => setActiveTab('syllabus')}
-                className={`px-4 py-2 rounded-md text-sm font-bold transition-all flex items-center gap-2 ${activeTab === 'syllabus' ? 'bg-pelican-coral text-white shadow-lg' : 'text-slate-400 hover:text-white'}`}
-            >
+            <button onClick={() => setActiveTab('syllabus')} className={`px-4 py-2 rounded-md text-sm font-bold transition-all flex items-center gap-2 ${activeTab === 'syllabus' ? 'bg-pelican-coral text-white shadow-lg' : 'text-slate-400 hover:text-white'}`}>
                 <List size={16} /> Syllabus
             </button>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
-        {/* LEFT COLUMN: Main Content */}
         <div className="lg:col-span-2 space-y-4">
           
-          {/* TAB 1: RESOURCES (Admin Uploaded) */}
+          {/* TAB 1: RESOURCES */}
           {activeTab === 'modules' && (
             <>
                 <h3 className="text-xl text-white font-bold mb-4">Course Materials</h3>
-                {modules.length === 0 && (
-                    <div className="p-12 border border-dashed border-white/10 rounded-2xl text-center flex flex-col items-center justify-center bg-white/5">
-                    <FileText className="text-slate-600 mb-4" size={48} />
-                    <p className="text-slate-400 font-medium">No materials uploaded yet.</p>
-                    <p className="text-slate-600 text-sm mt-1">Check back soon for files.</p>
-                    </div>
-                )}
+                {modules.length === 0 && <div className="p-12 border border-dashed border-white/10 rounded-2xl text-center bg-white/5 text-slate-500">No materials yet.</div>}
                 {modules.map((module) => (
                     <a key={module.id} href={module.file_url} target="_blank" rel="noopener noreferrer" className="bg-white/5 border border-white/10 rounded-xl p-6 hover:bg-white/10 hover:border-pelican-coral/50 transition-all flex items-center justify-between group">
                     <div className="flex items-center gap-5">
                         <div className="w-12 h-12 rounded-full bg-[#020617] border border-white/5 flex items-center justify-center text-pelican-coral">
                         {module.type === 'video' ? <PlayCircle size={24} /> : module.type === 'link' ? <ExternalLink size={24} /> : <FileText size={24} />}
                         </div>
-                        <div>
-                        <h4 className="text-white font-bold text-lg group-hover:text-pelican-coral transition-colors">{module.title}</h4>
-                        <span className="text-xs text-slate-500 uppercase tracking-wider font-bold">{module.type}</span>
-                        </div>
+                        <div><h4 className="text-white font-bold text-lg group-hover:text-pelican-coral transition-colors">{module.title}</h4><span className="text-xs text-slate-500 uppercase tracking-wider font-bold">{module.type}</span></div>
                     </div>
-                    <div className="p-3 bg-white/5 rounded-lg text-slate-400 group-hover:text-white group-hover:bg-pelican-coral transition-all">
-                        {module.type === 'link' ? <ExternalLink size={20} /> : <Download size={20} />}
-                    </div>
+                    <div className="p-3 bg-white/5 rounded-lg text-slate-400 group-hover:text-white group-hover:bg-pelican-coral transition-all"><Download size={20} /></div>
                     </a>
                 ))}
             </>
           )}
 
-          {/* TAB 2: SYLLABUS (Static Text) */}
+          {/* TAB 2: DYNAMIC SYLLABUS (Fetch from DB) */}
           {activeTab === 'syllabus' && (
             <>
                 <h3 className="text-xl text-white font-bold mb-4">Curriculum</h3>
                 <div className="space-y-4">
-                    {SYLLABUS[courseId] ? (
-                        SYLLABUS[courseId].map((topic, index) => (
-                            <div key={index} className="bg-white/5 border border-white/10 rounded-xl p-6">
-                                <span className="text-xs font-bold text-pelican-coral uppercase tracking-widest block mb-1">{topic.week}</span>
+                    {syllabus.length > 0 ? (
+                        syllabus.map((topic) => (
+                            <div key={topic.id} className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-white/20 transition-colors">
+                                <span className="text-xs font-bold text-pelican-coral uppercase tracking-widest block mb-1">{topic.week_label}</span>
                                 <h4 className="text-white font-bold text-lg mb-2">{topic.title}</h4>
-                                <p className="text-slate-400 text-sm leading-relaxed">{topic.desc}</p>
+                                <p className="text-slate-400 text-sm leading-relaxed">{topic.description}</p>
                             </div>
                         ))
                     ) : (
-                        <p className="text-slate-500">Syllabus details coming soon.</p>
+                        <div className="text-center p-8 text-slate-500 border border-dashed border-white/10 rounded-xl">
+                            Syllabus is being updated by the instructor.
+                        </div>
                     )}
                 </div>
             </>
@@ -199,7 +166,7 @@ export default function CourseView({ courseId }) {
 
         </div>
 
-        {/* RIGHT COLUMN: Sidebar Info */}
+        {/* Sidebar Info */}
         <div className="space-y-6">
           <div className="bg-[#020617]/50 border border-white/10 rounded-2xl p-6 backdrop-blur-md">
             <h3 className="text-white font-bold mb-4 uppercase text-xs tracking-widest text-slate-500">Instructor</h3>

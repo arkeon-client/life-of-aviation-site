@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { supabase } from '../../lib/supabaseClient';
-import { Bell, User, CheckCircle, Info, AlertTriangle, Megaphone, Sparkles } from 'lucide-react';
+import { Bell, CheckCircle, AlertTriangle, Megaphone, Sparkles } from 'lucide-react';
 
 export default function DashboardHeader() {
   const [user, setUser] = useState(null);
@@ -15,37 +15,34 @@ export default function DashboardHeader() {
         if (!user) return;
         setUser(user);
 
-        // 1. Fetch Necessary Data
+        // Fetch Data
         const [enrollResult, announceResult, profileResult] = await Promise.all([
             supabase.from('enrollments').select('course_id, status').eq('user_id', user.id).eq('status', 'active'),
-            supabase.from('announcements').select('*').eq('is_active', true).order('created_at', { ascending: false }),
+            supabase.from('announcements').select('*').eq('is_active', true).order('created_at', { ascending: false }).limit(10),
             supabase.from('profiles').select('created_at').eq('id', user.id).single()
         ]);
 
         const activeEnrollments = enrollResult.data || [];
-        const allAnnouncements = announceResult.data || [];
         const joinedAt = profileResult.data?.created_at;
+        const activeIds = activeEnrollments.map(e => e.course_id);
+        const isRegistered = activeIds.length > 0;
 
-        // 2. Logic: Filter Announcements
-        const relevantNotifications = allAnnouncements.filter(item => {
+        // Filter Logic
+        const relevantNotifications = (announceResult.data || []).filter(item => {
             if (item.target_group === 'all') return true;
-            
-            // Check Registered Status
-            if (item.target_group === 'registered') return activeEnrollments.length > 0;
-            if (item.target_group === 'not_registered') return activeEnrollments.length === 0;
-
-            // Check Specific Course
+            if (item.target_group === 'registered' && isRegistered) return true;
+            if (item.target_group === 'not_registered' && !isRegistered) return true;
             if (item.target_group.startsWith('course:')) {
                 const requiredCourse = item.target_group.split(':')[1];
-                return activeEnrollments.some(e => e.course_id === requiredCourse);
+                return activeIds.includes(requiredCourse);
             }
             return false;
         });
 
-        // 3. Logic: Add "Welcome" Message for New Users (< 24 hrs)
+        // Add Welcome
         if (joinedAt) {
             const diff = new Date() - new Date(joinedAt);
-            if (diff < 1000 * 60 * 60 * 24) { // 24 Hours
+            if (diff < 1000 * 60 * 60 * 24) { 
                 relevantNotifications.unshift({
                     id: 'welcome-msg',
                     title: 'Welcome, Captain!',
@@ -57,7 +54,17 @@ export default function DashboardHeader() {
         }
 
         setNotifications(relevantNotifications);
-        if (relevantNotifications.length > 0) setHasUnread(true);
+
+        // --- NEW LOGIC: CHECK LAST READ ---
+        if (relevantNotifications.length > 0) {
+            const lastRead = localStorage.getItem('last_read_notifications');
+            const latestMsgTime = new Date(relevantNotifications[0].created_at).getTime();
+            
+            // If no record, or latest msg is newer than last read -> Show Dot
+            if (!lastRead || latestMsgTime > parseInt(lastRead)) {
+                setHasUnread(true);
+            }
+        }
     }
     init();
 
@@ -72,7 +79,11 @@ export default function DashboardHeader() {
 
   const toggleNotifications = () => {
     setShowNotifications(!showNotifications);
-    if (!showNotifications) setHasUnread(false);
+    if (!showNotifications) {
+        setHasUnread(false);
+        // Save current timestamp as "Read"
+        localStorage.setItem('last_read_notifications', Date.now().toString());
+    }
   };
 
   const displayName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Pilot';
