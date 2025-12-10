@@ -35,12 +35,12 @@ const currentYear = new Date().getFullYear();
         {/* Social Icons */}
         <div class="flex space-x-3">
           {/* Instagram */}
-          <a href="#" target="_blank" class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-pelican-coral hover:border-pelican-coral hover:-translate-y-1 transition-all">
+          <a href="https://www.instagram.com/abelyirdaw?utm_source=qr" target="_blank" class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-pelican-coral hover:border-pelican-coral hover:-translate-y-1 transition-all">
             <Instagram className="w-5 h-5" />
           </a>
           
           {/* TikTok */}
-          <a href="#" target="_blank" class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-pelican-coral hover:border-pelican-coral hover:-translate-y-1 transition-all">
+          <a href="https://www.tiktok.com/@life.of.aviation?_r=1&_t=ZM-926hR0XQvdr" target="_blank" class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-pelican-coral hover:border-pelican-coral hover:-translate-y-1 transition-all">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
           </a>
 
@@ -50,8 +50,13 @@ const currentYear = new Date().getFullYear();
           </a>
 
           {/* Telegram Channel */}
-          <a href="https://t.me/lifeofaviation" target="_blank" class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-pelican-coral hover:border-pelican-coral hover:-translate-y-1 transition-all">
+          <a href="https://t.me/lifeofaviation" target="_blank" title="Telegram Channel" class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-pelican-coral hover:border-pelican-coral hover:-translate-y-1 transition-all">
             <Send className="w-5 h-5" />
+          </a>
+
+          {/* Telegram Bot (ADDED) */}
+          <a href="https://t.me/lifeofaviationbyabel1bot" target="_blank" title="Telegram Bot" class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-pelican-coral hover:border-pelican-coral hover:-translate-y-1 transition-all">
+            <MessageSquare className="w-5 h-5" />
           </a>
         </div>
       </div>
@@ -135,7 +140,6 @@ const currentYear = new Date().getFullYear();
 </footer>
 
 <script>
-  // Universal Subscriber Handler
   const forms = document.querySelectorAll('.subscribe-form');
   const toast = document.getElementById('toast');
 

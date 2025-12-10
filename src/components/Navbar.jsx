@@ -93,7 +93,7 @@ export default function Navbar() {
       {/* Mobile Full Screen Menu */}
       {isOpen && (
         <div className="fixed inset-0 z-40 bg-[#020617] flex animate-fade-in overflow-hidden">
-          <div className="pt-20 flex-1 flex flex-col items-center justify-center space-y-6 relative">
+          <div className="flex-1 flex flex-col items-center justify-center space-y-8 relative pt-32">
             {navLinks.map((link) => (
                 <a
                 key={link.name}
@@ -118,13 +118,12 @@ export default function Navbar() {
                 <X size={24} />
              </button>
 
-             {/* Mobile Sidebar Socials */}
              <div className="flex flex-col space-y-8">
-                <a href="#" className="text-slate-400 hover:text-pelican-coral hover:scale-125 transition-all"><Instagram size={24} /></a>
-                <a href="https://www.linkedin.com/in/abel-yirdaw-48b275220" target="_blank" className="text-slate-400 hover:text-pelican-coral hover:scale-125 transition-all"><Linkedin size={24} /></a>
-                <a href="#" className="text-slate-400 hover:text-pelican-coral hover:scale-125 transition-all">
+                <a href="https://www.instagram.com/abelyirdaw?utm_source=qr" target="_blank" className="text-slate-400 hover:text-pelican-coral hover:scale-125 transition-all"><Instagram size={24} /></a>
+                <a href="https://www.tiktok.com/@life.of.aviation?_r=1&_t=ZM-926hR0XQvdr" target="_blank" className="text-slate-400 hover:text-pelican-coral hover:scale-125 transition-all">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
                 </a>
+                <a href="https://www.linkedin.com/in/abel-yirdaw-48b275220" target="_blank" className="text-slate-400 hover:text-pelican-coral hover:scale-125 transition-all"><Linkedin size={24} /></a>
                 <a href="https://t.me/lifeofaviation" target="_blank" className="text-slate-400 hover:text-pelican-coral hover:scale-125 transition-all"><Send size={24} /></a>
              </div>
 
