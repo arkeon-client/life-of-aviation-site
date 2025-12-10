@@ -93,7 +93,7 @@ export default function Navbar() {
       {/* Mobile Full Screen Menu */}
       {isOpen && (
         <div className="fixed inset-0 z-40 bg-[#020617] flex animate-fade-in overflow-hidden">
-          <div className="flex-1 flex flex-col items-center justify-center space-y-8 relative">
+          <div className="pt-20 flex-1 flex flex-col items-center justify-center space-y-6 relative">
             {navLinks.map((link) => (
                 <a
                 key={link.name}

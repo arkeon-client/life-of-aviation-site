@@ -137,14 +137,21 @@ export default function ContactForm() {
             <label htmlFor="inquiryType" className={labelClasses}>Mission</label>
             <select 
               name="inquiryType"
-              className={`${inputClasses} appearance-none`}
+              className={`${inputClasses} appearance-none cursor-pointer`}
               onChange={handleChange}
               value={formData.inquiryType}
             >
-              <option className="bg-[#020617]">Course Inquiry</option>
-              <option className="bg-[#020617]">Mentorship</option>
-              <option className="bg-[#020617]">Partnership</option>
-              <option className="bg-[#020617]">Other</option>
+              <optgroup label="Education" className="bg-[#020617] text-gray-400">
+                <option className="bg-[#020617] text-white">Course Inquiry</option>
+                <option className="bg-[#020617] text-white">Mentorship Program</option>
+                <option className="bg-[#020617] text-white">Career Support</option>
+              </optgroup>
+              <optgroup label="Industry & Business" className="bg-[#020617] text-gray-400">
+                <option className="bg-[#020617] text-white">Company Feature / Showcase</option>
+                <option className="bg-[#020617] text-white">Content Creation / Video</option>
+                <option className="bg-[#020617] text-white">Sponsorship / Partnership</option>
+              </optgroup>
+              <option className="bg-[#020617] text-white">Other Inquiry</option>
             </select>
           </div>
         </div>
