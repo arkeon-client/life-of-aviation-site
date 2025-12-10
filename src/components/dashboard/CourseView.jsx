@@ -1,37 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabaseClient';
-import { Lock, CheckCircle, Send, FileText, PlayCircle, Download, XCircle, ExternalLink, RefreshCw, Loader2, List, CreditCard } from 'lucide-react';
+import { Lock, CheckCircle, Send, FileText, PlayCircle, Download, XCircle, ExternalLink, RefreshCw, Loader2, List, CreditCard, Home, Globe } from 'lucide-react';
 import ActionModal from '../ui/ActionModal';
-
-// STATIC SYLLABUS CONTENT
-const SYLLABUS = {
-  'aerogenesis': [
-    { week: 'Week 1', title: 'Introduction to Aviation & History', desc: 'First flights, pioneers of aviation, evolution of airplanes, fun aviation facts.' },
-    { week: 'Week 2', title: 'Aircraft Design & Systems', desc: 'How airplanes are built, wings, engines, control surfaces, simple aerodynamics.' },
-    { week: 'Week 3', title: 'Flight Operations', desc: 'Takeoff, cruising, landing, flight planning, and basic pilot workflow.' },
-    { week: 'Week 4', title: 'Air Traffic Control (ATC)', desc: 'Communication, radar, flight paths, safety, and coordination with pilots.' },
-    { week: 'Week 5', title: 'Aviation Safety & Problem-Solving', desc: 'Checklists, safety procedures, real-life scenario problem-solving activities.' },
-    { week: 'Week 6', title: 'Aviation Regulations', desc: 'ICAO, FAA, ECAA, IATA, why rules exist, and classroom group activities.' },
-    { week: 'Week 7', title: 'Aviation Management', desc: 'How airlines and airports are organized, teamwork, operations, and logistics.' },
-    { week: 'Week 8', title: 'Aviation Technology', desc: 'Jet engines, autopilot, avionics, GPS, radar, black box, and future innovations.' },
-    { week: 'Week 9', title: 'Aviation Careers', desc: 'Pilots, engineers, air traffic controllers, cabin crew, airport management.' },
-    { week: 'Week 10', title: 'Industry Trends', desc: 'Green aviation, AI, drones, supersonic jets, urban air mobility, space tourism.' },
-    { week: 'Week 11', title: 'Career Pathways', desc: 'Personal aviation dream plan, exploring career paths, preparing for the future.' },
-    { week: 'Week 12', title: 'Graduation & Showcase', desc: 'Review, project showcase, reflection activity, certificates, and inspiration.' },
-  ],
-  'mentorship': [
-    { week: 'Step 1', title: 'Personal Career Assessment', desc: 'Evaluate strengths, interests, and aviation goals to discover your path.' },
-    { week: 'Step 2', title: 'Job Market Orientation', desc: 'Understanding hiring inside airlines, airports, and support companies.' },
-    { week: 'Step 3', title: 'Profile Building', desc: 'Guidance on CV, cover letters, LinkedIn, and digital branding.' },
-    { week: 'Step 4', title: 'Competitiveness Coaching', desc: 'How to present yourself and communicate value in interviews.' },
-    { week: 'Step 5', title: 'Pathway to Opportunities', desc: 'Direction on internships, entry-level positions, and skill-building.' },
-  ]
-};
 
 export default function CourseView({ courseId }) {
   const [loading, setLoading] = useState(true);
   const [enrollment, setEnrollment] = useState(null);
   const [modules, setModules] = useState([]);
+  const [syllabus, setSyllabus] = useState([]);
   const [activeTab, setActiveTab] = useState('modules');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -50,12 +26,12 @@ export default function CourseView({ courseId }) {
       setEnrollment(enrollData);
 
       if (enrollData?.status === 'active') {
-        const { data: modData } = await supabase
-          .from('course_materials')
-          .select('*')
-          .eq('course_id', courseId)
-          .order('created_at', { ascending: true });
-        setModules(modData || []);
+        const [modResult, sylResult] = await Promise.all([
+            supabase.from('course_materials').select('*').eq('course_id', courseId).order('created_at', { ascending: true }),
+            supabase.from('course_syllabus').select('*').eq('course_id', courseId).order('order_index', { ascending: true })
+        ]);
+        setModules(modResult.data || []);
+        setSyllabus(sylResult.data || []);
       }
       setLoading(false);
     }
@@ -79,6 +55,7 @@ export default function CourseView({ courseId }) {
     </div>
   );
 
+  // REJECTED STATE
   if (enrollment.status === 'rejected') return (
     <div className="max-w-2xl mx-auto mt-10 animate-fade-in">
       <div className="bg-red-500/10 border border-red-500/30 rounded-3xl p-10 text-center backdrop-blur-md">
@@ -94,63 +71,66 @@ export default function CourseView({ courseId }) {
     </div>
   );
 
-  if (enrollment.status === 'pending') return (
-    <div className="max-w-4xl mx-auto animate-fade-in">
-      <div className="bg-gradient-to-br from-pelican-coral/10 to-blue-600/5 border border-pelican-coral/30 rounded-3xl p-8 md:p-12 text-center relative overflow-hidden backdrop-blur-md">
-        <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none"><Lock size={120} /></div>
-        
-        <h1 className="text-3xl md:text-4xl font-heading text-white mb-4">Payment Required</h1>
-        <p className="text-slate-300 text-lg mb-8 max-w-lg mx-auto">
-            To unlock <span className="text-pelican-coral font-bold capitalize">{courseId}</span>, please complete the enrollment fee using one of the options below.
-        </p>
-
-        {/* BANK GRID */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left mb-8">
+  // PENDING PAYMENT STATE (Updated with Options)
+  if (enrollment.status === 'pending') {
+    return (
+      <div className="max-w-4xl mx-auto animate-fade-in">
+        <div className="bg-gradient-to-br from-pelican-coral/10 to-blue-600/5 border border-pelican-coral/30 rounded-3xl p-8 md:p-12 text-center relative overflow-hidden backdrop-blur-md">
+          <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none"><Lock size={120} /></div>
           
-          <div className="bg-[#020617]/50 p-5 rounded-xl border border-white/10 flex flex-col justify-center">
-            <h3 className="text-white font-bold mb-1 flex items-center gap-2"><CreditCard size={16} className="text-pelican-coral"/> Telebirr</h3>
-            <p className="text-xl font-mono text-white tracking-wide font-bold">0991 882 942</p>
-            <p className="text-xs text-slate-500 mt-1">Abel Yirdaw</p>
+          <h1 className="text-3xl md:text-4xl font-heading text-white mb-4">Select Your Plan</h1>
+          <p className="text-slate-300 text-lg mb-8 max-w-lg mx-auto">
+              Please choose your preferred learning method and complete the payment to unlock <span className="text-pelican-coral font-bold capitalize">{courseId}</span>.
+          </p>
+
+          {/* PRICING OPTIONS */}
+          {courseId === 'aerogenesis' ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+                  {/* Option 1: Online */}
+                  <div className="bg-[#020617]/80 border border-white/10 rounded-2xl p-6 hover:border-pelican-coral/50 transition-all cursor-default">
+                      <div className="w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center mb-4 mx-auto"><Globe size={24} /></div>
+                      <h3 className="text-xl font-bold text-white mb-2">Online Tutoring</h3>
+                      <p className="text-3xl font-heading text-white mb-4">4,000 <span className="text-sm text-slate-400 font-body">Birr</span></p>
+                      <p className="text-slate-400 text-xs leading-relaxed">Full access to digital classroom, live sessions, and community.</p>
+                  </div>
+
+                  {/* Option 2: Home */}
+                  <div className="bg-[#020617]/80 border border-white/10 rounded-2xl p-6 hover:border-pelican-coral/50 transition-all cursor-default">
+                      <div className="w-12 h-12 rounded-full bg-pelican-coral/20 text-pelican-coral flex items-center justify-center mb-4 mx-auto"><Home size={24} /></div>
+                      <h3 className="text-xl font-bold text-white mb-2">Home-to-Home</h3>
+                      <p className="text-3xl font-heading text-white mb-4">10,000 <span className="text-sm text-slate-400 font-body">Birr</span></p>
+                      <p className="text-slate-400 text-xs leading-relaxed">In-person private tutoring at your location + full digital access.</p>
+                  </div>
+              </div>
+          ) : (
+              // Mentorship Pricing
+              <div className="bg-[#020617]/80 border border-white/10 rounded-2xl p-6 mb-12 max-w-sm mx-auto">
+                  <h3 className="text-xl font-bold text-white mb-2">Standard Access</h3>
+                  <p className="text-3xl font-heading text-white mb-2">2,000 <span className="text-sm text-slate-400 font-body">Birr</span></p>
+              </div>
+          )}
+
+          <h3 className="text-white font-bold mb-6 text-xl">Payment Accounts</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left mb-8">
+            <div className="bg-[#020617]/50 p-4 rounded-xl border border-white/10"><h4 className="text-white font-bold text-sm">Telebirr</h4><p className="text-pelican-coral font-mono font-bold">0991 882 942</p></div>
+            <div className="bg-[#020617]/50 p-4 rounded-xl border border-white/10"><h4 className="text-white font-bold text-sm">CBE</h4><p className="text-pelican-coral font-mono font-bold">1000548442285</p></div>
+            <div className="bg-[#020617]/50 p-4 rounded-xl border border-white/10"><h4 className="text-white font-bold text-sm">Amhara Bank</h4><p className="text-pelican-coral font-mono font-bold">9900026458653</p></div>
+            <div className="bg-[#020617]/50 p-4 rounded-xl border border-white/10"><h4 className="text-white font-bold text-sm">Abay Bank</h4><p className="text-pelican-coral font-mono font-bold">1191011165601913</p></div>
+            <div className="bg-[#020617]/50 p-4 rounded-xl border border-white/10"><h4 className="text-white font-bold text-sm">Bank of Abyssinia</h4><p className="text-pelican-coral font-mono font-bold">18461773</p></div>
+            <div className="bg-[#020617]/50 p-4 rounded-xl border border-white/10"><h4 className="text-white font-bold text-sm">Dashen Bank</h4><p className="text-pelican-coral font-mono font-bold">5031530930011</p></div>
           </div>
 
-          <div className="bg-[#020617]/50 p-5 rounded-xl border border-white/10 flex flex-col justify-center">
-            <h3 className="text-white font-bold mb-1 flex items-center gap-2"><CreditCard size={16} className="text-purple-400"/> CBE</h3>
-            <p className="text-xl font-mono text-white tracking-wide font-bold">1000548442285</p>
-            <p className="text-xs text-slate-500 mt-1">Commercial Bank of Ethiopia</p>
+          <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+            <h3 className="text-white font-bold mb-2">Verify Payment</h3>
+            <p className="text-slate-400 text-sm mb-6">Send your payment receipt and mention which plan (Online/Home) you paid for.</p>
+            <a href="https://t.me/lifeofaviation" target="_blank" className="inline-flex items-center px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all shadow-lg">
+              <Send size={18} className="mr-2" /> Send Proof on Telegram
+            </a>
           </div>
-
-          <div className="bg-[#020617]/50 p-5 rounded-xl border border-white/10 flex flex-col justify-center">
-            <h3 className="text-white font-bold mb-1 flex items-center gap-2"><CreditCard size={16} className="text-blue-400"/> Amhara Bank</h3>
-            <p className="text-lg font-mono text-white tracking-wide font-bold">9900026458653</p>
-          </div>
-
-          <div className="bg-[#020617]/50 p-5 rounded-xl border border-white/10 flex flex-col justify-center">
-            <h3 className="text-white font-bold mb-1 flex items-center gap-2"><CreditCard size={16} className="text-green-400"/> Abay Bank</h3>
-            <p className="text-lg font-mono text-white tracking-wide font-bold">1191011165601913</p>
-          </div>
-
-          <div className="bg-[#020617]/50 p-5 rounded-xl border border-white/10 flex flex-col justify-center">
-            <h3 className="text-white font-bold mb-1 flex items-center gap-2"><CreditCard size={16} className="text-yellow-400"/> Bank of Abyssinia</h3>
-            <p className="text-lg font-mono text-white tracking-wide font-bold">18461773</p>
-          </div>
-
-          <div className="bg-[#020617]/50 p-5 rounded-xl border border-white/10 flex flex-col justify-center">
-            <h3 className="text-white font-bold mb-1 flex items-center gap-2"><CreditCard size={16} className="text-indigo-400"/> Dashen Bank</h3>
-            <p className="text-lg font-mono text-white tracking-wide font-bold">5031530930011</p>
-          </div>
-
-        </div>
-
-        <div className="bg-white/5 border border-white/10 rounded-xl p-6">
-          <h3 className="text-white font-bold mb-2">Step 2: Verify Payment</h3>
-          <p className="text-slate-400 text-sm mb-6">Send a screenshot of your transaction to our Admin via Telegram.</p>
-          <a href="https://t.me/Ableo" target="_blank" className="inline-flex items-center px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-blue-500/25">
-            <Send size={18} className="mr-2" /> Send Proof on Telegram
-          </a>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
 
   // ACTIVE STATE (Same as before)
   return (
@@ -163,7 +143,6 @@ export default function CourseView({ courseId }) {
           <h1 className="text-4xl font-heading text-white capitalize">{courseId}</h1>
         </div>
         
-        {/* TABS */}
         <div className="flex bg-white/5 p-1 rounded-lg">
             <button onClick={() => setActiveTab('modules')} className={`px-4 py-2 rounded-md text-sm font-bold transition-all flex items-center gap-2 ${activeTab === 'modules' ? 'bg-pelican-coral text-white shadow-lg' : 'text-slate-400 hover:text-white'}`}>
                 <FileText size={16} /> Resources
@@ -177,7 +156,6 @@ export default function CourseView({ courseId }) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-4">
           
-          {/* TAB 1: RESOURCES */}
           {activeTab === 'modules' && (
             <>
                 <h3 className="text-xl text-white font-bold mb-4">Course Materials</h3>
@@ -196,21 +174,22 @@ export default function CourseView({ courseId }) {
             </>
           )}
 
-          {/* TAB 2: DYNAMIC SYLLABUS */}
           {activeTab === 'syllabus' && (
             <>
                 <h3 className="text-xl text-white font-bold mb-4">Curriculum</h3>
                 <div className="space-y-4">
-                    {SYLLABUS[courseId] ? (
-                        SYLLABUS[courseId].map((topic, index) => (
-                            <div key={index} className="bg-white/5 border border-white/10 rounded-xl p-6">
-                                <span className="text-xs font-bold text-pelican-coral uppercase tracking-widest block mb-1">{topic.week}</span>
+                    {syllabus.length > 0 ? (
+                        syllabus.map((topic) => (
+                            <div key={topic.id} className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-white/20 transition-colors">
+                                <span className="text-xs font-bold text-pelican-coral uppercase tracking-widest block mb-1">{topic.week_label}</span>
                                 <h4 className="text-white font-bold text-lg mb-2">{topic.title}</h4>
-                                <p className="text-slate-400 text-sm leading-relaxed">{topic.desc}</p>
+                                <p className="text-slate-400 text-sm leading-relaxed">{topic.description}</p>
                             </div>
                         ))
                     ) : (
-                        <p className="text-slate-500">Syllabus details coming soon.</p>
+                        <div className="text-center p-8 text-slate-500 border border-dashed border-white/10 rounded-xl">
+                            Syllabus details available from instructor.
+                        </div>
                     )}
                 </div>
             </>
@@ -218,15 +197,15 @@ export default function CourseView({ courseId }) {
 
         </div>
 
-        {/* Sidebar Info */}
         <div className="space-y-6">
           <div className="bg-[#020617]/50 border border-white/10 rounded-2xl p-6 backdrop-blur-md">
             <h3 className="text-white font-bold mb-4 uppercase text-xs tracking-widest text-slate-500">Instructor</h3>
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-slate-700 rounded-full overflow-hidden border-2 border-white/10">
-                <img src="/images/founder.jpg" alt="Abel" className="w-full h-full object-cover" />
+                <img src="/images/abel.jpg" alt="Abel" className="w-full h-full object-cover" />
               </div>
               <div>
+                {/* FOUNDER TITLE: YOU CAN CHANGE 'CAPTAIN' HERE IF NEEDED */}
                 <p className="text-base text-white font-bold">Captain Abel</p>
                 <p className="text-xs text-pelican-coral font-bold uppercase tracking-wide">Senior Instructor</p>
               </div>

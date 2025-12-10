@@ -112,7 +112,7 @@ export default function ContactForm() {
           <input 
             type="email" 
             name="email" 
-            placeholder="pilot@example.com"
+            placeholder="hello@example.com"
             required 
             className={inputClasses}
             onChange={handleChange}

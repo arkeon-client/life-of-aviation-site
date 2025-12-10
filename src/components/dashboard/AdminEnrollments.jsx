@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabaseClient';
-import { Loader2, Check, X, User, BookOpen, Clock, RefreshCw, Sparkles } from 'lucide-react';
+import { Loader2, Check, X, User, BookOpen, Clock, RefreshCw, Sparkles, Info } from 'lucide-react';
 
 export default function AdminEnrollments() {
   const [enrollments, setEnrollments] = useState([]);
@@ -29,7 +29,7 @@ export default function AdminEnrollments() {
   // LOGIC: Is it a new application? (Created < 24 hours ago)
   const isNew = (created_at) => {
     const diff = new Date() - new Date(created_at);
-    return diff < 1000 * 60 * 60 * 24; // 24 Hours
+    return diff < 1000 * 60 * 60 * 24; 
   };
 
   // LOGIC: Is it a re-application? (Pending, but Updated significantly later than Created)
@@ -45,11 +45,23 @@ export default function AdminEnrollments() {
 
   return (
     <div>
-      <div className="flex items-end justify-between mb-6">
-        <h2 className="text-2xl font-heading text-white">Enrollment Requests</h2>
-        <span className="text-xs font-bold text-slate-500 uppercase tracking-widest bg-white/5 px-3 py-1 rounded-lg">
-          {enrollments.filter(e => e.status === 'pending').length} Pending
-        </span>
+      <div className="flex flex-col md:flex-row justify-between items-end mb-6 gap-4">
+        <div>
+            <h2 className="text-2xl font-heading text-white">Enrollment Requests</h2>
+            <p className="text-slate-400 text-xs mt-1">Approve students based on Telegram payment proof.</p>
+        </div>
+        
+        {/* PRICE CHEAT SHEET FOR ADMIN */}
+        <div className="flex gap-3 text-[10px] bg-white/5 p-2 rounded-lg border border-white/5">
+            <div className="flex items-center gap-1 text-slate-300">
+                <Info size={12} className="text-blue-400" /> 
+                <span className="font-bold text-white">Aerogenesis:</span> 4,000 (Online) / 10,000 (Home)
+            </div>
+            <div className="w-px bg-white/10"></div>
+            <div className="flex items-center gap-1 text-slate-300">
+                <span className="font-bold text-white">Mentorship:</span> 2,000
+            </div>
+        </div>
       </div>
       
       <div className="space-y-4">
