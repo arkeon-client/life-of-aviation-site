@@ -5,7 +5,7 @@ import { Mail, Lock, User, Loader2, ArrowRight, AlertTriangle, CheckCircle } fro
 export default function AuthForm({ type = 'login' }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null); // New state for success message
+  const [success, setSuccess] = useState(null);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -24,16 +24,21 @@ export default function AuthForm({ type = 'login' }) {
 
     try {
       if (type === 'signup') {
+        
+        // THE FIX: Explicitly tell Supabase where to redirect after clicking the email link
+        // window.location.origin grabs "https://lifeofaviation.netlify.app" automatically
+        const redirectUrl = `${window.location.origin}/signin`;
+
         const { error } = await supabase.auth.signUp({
           email: formData.email,
           password: formData.password,
           options: {
             data: { full_name: formData.fullName },
+            emailRedirectTo: redirectUrl, // <--- THIS FIXES THE LOCALHOST LINK
           },
         });
         if (error) throw error;
         
-        // Branded Success Message
         setSuccess('Registration successful! Please check your email inbox to confirm your account.');
         
       } else {
@@ -54,7 +59,7 @@ export default function AuthForm({ type = 'login' }) {
 
   const inputClasses = "w-full pl-12 pr-4 py-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:border-pelican-coral focus:ring-1 focus:ring-pelican-coral outline-none transition-all";
 
-  // SUCCESS VIEW (Replaces Alert)
+  // SUCCESS VIEW
   if (success) {
     return (
       <div className="w-full max-w-md mx-auto animate-fade-in">
