@@ -188,7 +188,7 @@ export default function AdminUserManager() {
             </div>
 
             <div className="flex items-center gap-3 w-full md:w-auto justify-end border-t md:border-t-0 border-white/5 pt-3 md:pt-0">
-              <a href={`mailto:${user.email}`} className="p-2 bg-white/5 hover:bg-white hover:text-[#020617] rounded-lg text-slate-400 transition-colors" title="Send Email">
+              <a href={`mailto:${user.email}`} target="_blank" rel="noopener noreferrer"className="p-2 bg-white/5 hover:bg-white hover:text-[#020617] rounded-lg text-slate-400 transition-colors" title="Send Email">
                 <Mail size={18} />
               </a>
               <button onClick={() => handleDelete(user.id)} className="p-2 bg-red-500/10 hover:bg-red-500 hover:text-white rounded-lg text-red-400 transition-colors" title="Delete User">
