@@ -1,20 +1,13 @@
 import React, { useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
-import { Mail, Lock, User, Loader2, ArrowRight, AlertTriangle, CheckCircle } from 'lucide-react';
+import { Mail, Lock, User, Loader2, ArrowRight, AlertTriangle, CheckCircle, KeyRound } from 'lucide-react';
 
 export default function AuthForm({ type = 'login' }) {
+  // view state: 'login', 'signup', 'forgot'
+  const [view, setView] = useState(type === 'signup' ? 'signup' : 'login');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    fullName: ''
-  });
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
   const handleAuth = async (e) => {
     e.preventDefault();
@@ -22,33 +15,46 @@ export default function AuthForm({ type = 'login' }) {
     setError(null);
     setSuccess(null);
 
-    try {
-      if (type === 'signup') {
-        
-        // THE FIX: Explicitly tell Supabase where to redirect after clicking the email link
-        // window.location.origin grabs "https://lifeofaviation.netlify.app" automatically
-        const redirectUrl = `${window.location.origin}/signin`;
+    // AUTOFILL FIX: Grab values directly from the form event
+    const formData = new FormData(e.target);
+    const email = formData.get('email');
+    const password = formData.get('password');
+    const fullName = formData.get('fullName');
 
+    try {
+      // 1. FORGOT PASSWORD LOGIC
+      if (view === 'forgot') {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: window.location.origin + '/update-password',
+        });
+        if (error) throw error;
+        setSuccess('Recovery link sent! Check your email to reset your password.');
+      } 
+      
+      // 2. SIGN UP LOGIC
+      else if (view === 'signup') {
         const { error } = await supabase.auth.signUp({
-          email: formData.email,
-          password: formData.password,
+          email,
+          password,
           options: {
-            data: { full_name: formData.fullName },
-            emailRedirectTo: redirectUrl, // <--- THIS FIXES THE LOCALHOST LINK
+            data: { full_name: fullName },
+            emailRedirectTo: window.location.origin + '/signin',
           },
         });
         if (error) throw error;
-        
-        setSuccess('Registration successful! Please check your email inbox to confirm your account.');
-        
-      } else {
+        setSuccess('Registration successful! Please check your email to confirm.');
+      } 
+      
+      // 3. LOGIN LOGIC
+      else {
         const { error } = await supabase.auth.signInWithPassword({
-          email: formData.email,
-          password: formData.password,
+          email,
+          password,
         });
         if (error) throw error;
         window.location.href = '/dashboard'; 
       }
+
     } catch (err) {
       console.error("Auth Error:", err);
       setError(err.message);
@@ -67,13 +73,11 @@ export default function AuthForm({ type = 'login' }) {
           <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6 text-green-500">
             <CheckCircle size={40} />
           </div>
-          <h2 className="font-heading text-3xl text-white mb-4">Welcome Aboard</h2>
-          <p className="text-slate-300 mb-8 leading-relaxed">
-            {success}
-          </p>
-          <a href="/signin" className="block w-full py-4 bg-pelican-coral text-white font-bold rounded-xl hover:bg-white hover:text-[#020617] transition-all">
-            Proceed to Login
-          </a>
+          <h2 className="font-heading text-3xl text-white mb-4">Transmission Sent</h2>
+          <p className="text-slate-300 mb-8 leading-relaxed">{success}</p>
+          <button onClick={() => { setSuccess(null); setView('login'); }} className="block w-full py-4 bg-pelican-coral text-white font-bold rounded-xl hover:bg-white hover:text-[#020617] transition-all">
+            Return to Login
+          </button>
         </div>
       </div>
     );
@@ -87,10 +91,12 @@ export default function AuthForm({ type = 'login' }) {
 
         <div className="text-center mb-8">
           <h2 className="font-heading text-3xl text-white mb-2">
-            {type === 'login' ? 'Welcome Back' : 'Join the Corps'}
+            {view === 'login' ? 'Welcome Back' : view === 'signup' ? 'Join the Corps' : 'Account Recovery'}
           </h2>
           <p className="text-slate-400 text-sm">
-            {type === 'login' ? 'Enter your credentials to access the flight deck.' : 'Start your journey to aviation excellence.'}
+            {view === 'login' ? 'Enter your credentials to access the flight deck.' : 
+             view === 'signup' ? 'Start your journey to aviation excellence.' :
+             'Enter your email to receive a password reset link.'}
           </p>
         </div>
 
@@ -103,43 +109,36 @@ export default function AuthForm({ type = 'login' }) {
 
         <form onSubmit={handleAuth} className="space-y-5">
           
-          {type === 'signup' && (
+          {/* Full Name (Sign Up Only) */}
+          {view === 'signup' && (
             <div className="relative group">
               <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-pelican-coral transition-colors w-5 h-5" />
-              <input
-                type="text"
-                name="fullName"
-                placeholder="Full Name"
-                required
-                className={inputClasses}
-                onChange={handleChange}
-              />
+              <input type="text" name="fullName" placeholder="Full Name" required className={inputClasses} />
             </div>
           )}
 
+          {/* Email (All Views) */}
           <div className="relative group">
             <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-pelican-coral transition-colors w-5 h-5" />
-            <input
-              type="email"
-              name="email"
-              placeholder="Email Address"
-              required
-              className={inputClasses}
-              onChange={handleChange}
-            />
+            <input type="email" name="email" placeholder="Email Address" required className={inputClasses} />
           </div>
 
-          <div className="relative group">
-            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-pelican-coral transition-colors w-5 h-5" />
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              required
-              className={inputClasses}
-              onChange={handleChange}
-            />
-          </div>
+          {/* Password (Login & Signup Only) */}
+          {view !== 'forgot' && (
+            <div className="relative group">
+              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-pelican-coral transition-colors w-5 h-5" />
+              <input type="password" name="password" placeholder="Password" required className={inputClasses} />
+            </div>
+          )}
+
+          {/* Forgot Password Link */}
+          {view === 'login' && (
+            <div className="text-right">
+              <button type="button" onClick={() => setView('forgot')} className="text-xs text-slate-400 hover:text-pelican-coral transition-colors">
+                Forgot Password?
+              </button>
+            </div>
+          )}
 
           <button
             type="submit"
@@ -150,23 +149,23 @@ export default function AuthForm({ type = 'login' }) {
               <Loader2 className="w-5 h-5 animate-spin" />
             ) : (
               <>
-                {type === 'login' ? 'Sign In' : 'Create Account'}
+                {view === 'login' ? 'Sign In' : view === 'signup' ? 'Create Account' : 'Send Recovery Link'}
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </>
             )}
           </button>
         </form>
 
-        <div className="mt-8 text-center">
-          <p className="text-slate-400 text-sm">
-            {type === 'login' ? "Don't have an account? " : "Already have an account? "}
-            <a 
-              href={type === 'login' ? '/signup' : '/signin'} 
-              className="text-pelican-coral hover:text-white font-bold transition-colors"
-            >
-              {type === 'login' ? 'Apply Now' : 'Sign In'}
-            </a>
-          </p>
+        <div className="mt-8 text-center border-t border-white/5 pt-6">
+          {view === 'login' ? (
+            <p className="text-slate-400 text-sm">
+              Don't have an account? <button onClick={() => setView('signup')} className="text-pelican-coral hover:text-white font-bold transition-colors">Apply Now</button>
+            </p>
+          ) : (
+            <p className="text-slate-400 text-sm">
+              Remember your credentials? <button onClick={() => setView('login')} className="text-pelican-coral hover:text-white font-bold transition-colors">Sign In</button>
+            </p>
+          )}
         </div>
 
       </div>
