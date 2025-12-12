@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabaseClient';
-import { Upload, FileText, Trash2, Loader2, Video, Link as LinkIcon, Plus } from 'lucide-react';
-import GlassModal from '../ui/ActionModal'; // Import Modal
+import { Upload, FileText, Trash2, Loader2, Video, Link as LinkIcon, Plus, CheckCircle, AlertTriangle } from 'lucide-react';
 
 const COURSES = [
   { id: 'aerogenesis', label: 'Aerogenesis' },
@@ -13,14 +12,15 @@ export default function AdminCourseManager() {
   const [materials, setMaterials] = useState([]);
   const [uploading, setUploading] = useState(false);
   
+  // Status State: 'idle', 'success', 'error'
+  const [status, setStatus] = useState('idle');
+  const [statusMessage, setStatusMessage] = useState('');
+
   // Form State
   const [title, setTitle] = useState('');
   const [type, setType] = useState('pdf');
   const [file, setFile] = useState(null);
   const [externalLink, setExternalLink] = useState('');
-
-  // Modal State
-  const [modal, setModal] = useState({ isOpen: false, type: 'confirm', title: '', message: '', onConfirm: null });
 
   useEffect(() => {
     fetchMaterials();
@@ -38,6 +38,7 @@ export default function AdminCourseManager() {
   async function handleUpload(e) {
     e.preventDefault();
     setUploading(true);
+    setStatus('idle');
 
     try {
       let finalUrl = '';
@@ -73,68 +74,40 @@ export default function AdminCourseManager() {
 
       if (dbError) throw dbError;
 
+      // Reset Form
       setTitle('');
       setFile(null);
       setExternalLink('');
       fetchMaterials();
       
-      // Success Modal
-      setModal({
-        isOpen: true,
-        type: 'success',
-        title: 'Upload Complete',
-        message: 'The new module has been deployed to the classroom successfully.',
-        onConfirm: null
-      });
+      // Show Simple Success Message
+      setStatus('success');
+      setStatusMessage('Material successfully deployed to the classroom.');
 
     } catch (err) {
       console.error(err);
-      // Error Modal
-      setModal({
-        isOpen: true,
-        type: 'error',
-        title: 'Upload Failed',
-        message: err.message,
-        onConfirm: null
-      });
+      setStatus('error');
+      setStatusMessage(err.message);
     } finally {
       setUploading(false);
     }
   }
 
-  function confirmDelete(id) {
-    setModal({
-      isOpen: true,
-      type: 'confirm',
-      title: 'Delete Material?',
-      message: 'This action cannot be undone. The file will be removed from the classroom.',
-      onConfirm: () => performDelete(id)
-    });
-  }
-
   async function performDelete(id) {
+    if(!confirm("Are you sure you want to delete this material?")) return;
     await supabase.from('course_materials').delete().eq('id', id);
     fetchMaterials();
   }
 
   return (
     <div className="mt-8">
-      <GlassModal 
-        isOpen={modal.isOpen} 
-        onClose={() => setModal({ ...modal, isOpen: false })} 
-        title={modal.title} 
-        message={modal.message} 
-        type={modal.type} 
-        onConfirm={modal.onConfirm} 
-      />
-
       <h2 className="text-2xl font-heading text-white mb-6">Course Content Manager</h2>
 
       <div className="flex gap-4 mb-8">
         {COURSES.map(c => (
           <button
             key={c.id}
-            onClick={() => setSelectedCourse(c.id)}
+            onClick={() => { setSelectedCourse(c.id); setStatus('idle'); }}
             className={`px-6 py-2 rounded-lg font-bold transition-all ${selectedCourse === c.id ? 'bg-pelican-coral text-white' : 'bg-white/5 text-slate-400 hover:text-white'}`}
           >
             {c.label}
@@ -144,8 +117,43 @@ export default function AdminCourseManager() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         
-        {/* Upload Form */}
-        <div className="bg-white/5 border border-white/10 rounded-xl p-6 h-fit">
+        {/* Upload Form Area */}
+        <div className="bg-white/5 border border-white/10 rounded-xl p-6 h-fit relative overflow-hidden">
+          
+          {/* SUCCESS OVERLAY */}
+          {status === 'success' && (
+            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-[#020617] text-center p-6 animate-fade-in">
+              <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center text-green-500 mb-4 border border-green-500/30">
+                <CheckCircle size={32} />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">Upload Complete</h3>
+              <p className="text-slate-400 mb-6">{statusMessage}</p>
+              <button 
+                onClick={() => setStatus('idle')} 
+                className="px-8 py-2 bg-white text-black font-bold rounded-lg hover:bg-gray-200 transition-colors"
+              >
+                Done
+              </button>
+            </div>
+          )}
+
+          {/* ERROR OVERLAY */}
+          {status === 'error' && (
+            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-[#020617] text-center p-6 animate-fade-in">
+              <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center text-red-500 mb-4 border border-red-500/30">
+                <AlertTriangle size={32} />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">Upload Failed</h3>
+              <p className="text-red-200 mb-6 max-w-xs">{statusMessage}</p>
+              <button 
+                onClick={() => setStatus('idle')} 
+                className="px-8 py-2 bg-white/10 text-white font-bold rounded-lg hover:bg-white/20 transition-colors border border-white/10"
+              >
+                Try Again
+              </button>
+            </div>
+          )}
+
           <h3 className="text-white font-bold mb-4 flex items-center gap-2">
             <Plus size={18} className="text-pelican-coral" /> Add New Material
           </h3>
@@ -228,7 +236,7 @@ export default function AdminCourseManager() {
                 </div>
               </div>
               <button 
-                onClick={() => confirmDelete(m.id)}
+                onClick={() => performDelete(m.id)}
                 className="text-slate-500 hover:text-red-400 transition-colors"
               >
                 <Trash2 size={18} />

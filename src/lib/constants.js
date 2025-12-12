@@ -1,7 +1,6 @@
 // src/lib/constants.js
 
-// Add all admin emails here
-export const ADMIN_EMAILS = [
-  'btadele030@gmail.com', 
-  'abelyirdaw3@gmail.com' // <-- Add the new admin email here
-];
+// Read from Environment Variable and split into an array
+const adminString = import.meta.env.PUBLIC_ADMIN_EMAILS || '';
+
+export const ADMIN_EMAILS = adminString.split(',').map(email => email.trim());
