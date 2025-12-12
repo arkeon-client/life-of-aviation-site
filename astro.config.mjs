@@ -5,6 +5,8 @@ import react from '@astrojs/react';
 import netlify from '@astrojs/netlify';
 
 export default defineConfig({
+
+  site: 'https://lifeofaviation.netlify.app',
   // CHANGE 1: Set output to 'server'
   output: 'server',
   
