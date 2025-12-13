@@ -42,7 +42,7 @@ export default function AuthForm({ type = 'login' }) {
           },
         });
         if (error) throw error;
-        setSuccess('Registration successful! Please check your email to confirm.');
+        setSuccess('Registration successful! You can now log in.');
       } 
       
       // 3. LOGIN LOGIC
