@@ -1,23 +1,22 @@
-// src/components/PelicanIcon.jsx
 import React from 'react';
 
 export default function PelicanIcon({ className = "w-6 h-6", color = "currentColor" }) {
-  // A stylized bird/pelican flight icon
   return (
     <svg 
       xmlns="http://www.w3.org/2000/svg" 
-      viewBox="0 0 24 24" 
-      fill="none" 
+      viewBox="0 0 100 100" 
+      fill={color} 
       stroke={color} 
-      strokeWidth="1.5" 
-      strokeLinecap="round" 
-      strokeLinejoin="round" 
+      strokeWidth="0" 
       className={className}
     >
-      <path d="M16 7c0-3-2-5-5-5S6 4 6 7c0 4 4 8 4 8s-6-1-8 4" />
-      <path d="M4 19c0 2 2 3 4 3 5 0 10-6 12-12" />
-      <path d="M15 10c2-1 4-1 6 0" />
-      <path d="M12 15c3 0 6-2 9-5" />
+      {/* Realistic Pelican Head & Neck Profile */}
+      <path d="M78.5,28.5 c-3.2-4.5-9.8-6.2-16.5-4.2 c-4.2,1.2-7.8,4.5-9.5,8.5 c-0.5,1.2-0.8,2.5-0.8,3.8 c0,0.5-2.5,0.8-7.5,1.2
+        c-16.5,1.5-31.5,3.5-35.8,4.2 c-1.5,0.2-2.8,1.5-2.2,3.2 c0.5,1.5,3.2,8.5,3.2,8.5 s1.2,3.2,3.5,4.5 c5.5,3.2,18.5,8.5,32.5,8.5
+        c8.5,0,14.5-2.5,18.2-5.5 c2.5,3.5,6.2,6.5,11.5,7.8 c1.5,0.4,3.2-0.5,3.5-2.2 c0.2-1.2,0.5-3.5,0.5-6.5 c0-5.5-1.5-10.5-3.5-14.5
+        C77.5,38.5,80.5,31.5,78.5,28.5 z M52.5,38.5 c2.5-0.2,5.2-0.5,7.8-0.5 c0.5,0,0.8,0.2,0.8,0.8 c0,2.5-0.2,5.2-0.8,7.8
+        c-0.2,0.8-1.2,1.2-1.8,0.8 c-2.2-1.8-4.5-2.8-6.8-2.8 C50.8,44.5,51.5,38.8,52.5,38.5 z" 
+      />
     </svg>
   );
 }
