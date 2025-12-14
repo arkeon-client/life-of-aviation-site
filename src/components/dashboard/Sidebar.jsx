@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Home, BookOpen, Settings, LogOut, Menu, X, ShieldAlert, Users, FileText, Inbox, PenTool, Megaphone } from 'lucide-react';
+import { Home, BookOpen, Settings, LogOut, Menu, X, ShieldAlert, Users, FileText, Inbox, PenTool, Megaphone, LifeBuoy } from 'lucide-react'; // Added LifeBuoy
 import PelicanIcon from '../PelicanIcon';
 import { supabase } from '../../lib/supabaseClient';
-import { ADMIN_EMAILS } from '../../lib/constants'; // Updated import
+import { ADMIN_EMAILS } from '../../lib/constants';
 
 const menuItems = [
   { name: 'Overview', icon: Home, href: '/dashboard' },
   { name: 'My Courses', icon: BookOpen, href: '/dashboard/courses' },
+  { name: 'Support', icon: LifeBuoy, href: '/dashboard/support' }, // NEW ITEM
   { name: 'Settings', icon: Settings, href: '/dashboard/settings' },
 ];
 
@@ -29,7 +30,6 @@ export default function Sidebar() {
     
     async function checkAdmin() {
       const { data: { user } } = await supabase.auth.getUser();
-      // UPDATED LOGIC: Check if email is in the array
       if (user && ADMIN_EMAILS.includes(user.email)) {
         setIsAdmin(true);
       }

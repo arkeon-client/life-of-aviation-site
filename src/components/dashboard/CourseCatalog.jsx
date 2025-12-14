@@ -18,7 +18,7 @@ const COURSES = [
   {
     id: 'mentorship',
     title: 'Career Mentorship',
-    description: 'One-on-one guidance with Captain Abel to navigate your aviation career path.',
+    description: 'One-on-one guidance with Founder & Aviation Expert to navigate your aviation career path.',
     pricing: [
       { type: 'Standard', price: '2,000 Birr', icon: BookOpen }
     ],

@@ -206,7 +206,7 @@ export default function CourseView({ courseId }) {
               </div>
               <div>
                 {/* FOUNDER TITLE: YOU CAN CHANGE 'CAPTAIN' HERE IF NEEDED */}
-                <p className="text-base text-white font-bold">Captain Abel</p>
+                <p className="text-base text-white font-bold">Founder & Aviation Expert</p>
                 <p className="text-xs text-pelican-coral font-bold uppercase tracking-wide">Senior Instructor</p>
               </div>
             </div>
